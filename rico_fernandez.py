@@ -3,7 +3,7 @@ import streamlit as st
 
 # 1. Configuración de la página
 st.set_page_config(
-    page_title="RESTAURANT RICO FERNANDEZ - Menú Digital",
+    page_title="RESTAURANT FERNANDEZ - Menú Digital",
     page_icon="🍔",
     layout="centered",
     initial_sidebar_state="collapsed",
