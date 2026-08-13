@@ -3,7 +3,7 @@ import streamlit as st
 
 # 1. Configuración de la página
 st.set_page_config(
-    page_title="RESTAURANT FERNANDEZ - Menú Digital",
+    page_title="RESTAURANT RICO FERNANDEZ - Menú Digital",
     page_icon="🍔",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -41,8 +41,8 @@ st.markdown(
 
     .sub-title {
         color: #9CA3AF;
-        font-size: 1.1rem;
-        margin-top: -10px;
+        font-size: 1rem;
+        margin-top: -8px;
         margin-bottom: 15px;
         font-weight: 300;
         letter-spacing: 2px;
@@ -135,15 +135,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 3. Encabezado principal con Título Curvado en SVG
+# 3. Encabezado principal con Título Curvado Ajustado (Sin Cortes)
 st.markdown(
     """
     <div class="header-container">
-        <svg width="100%" height="90" viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg">
-            <path id="curve" d="M 50 80 Q 250 15 450 80" fill="transparent"/>
-            <text font-family="'Helvetica Neue', sans-serif" font-size="34" font-weight="900" fill="#FF7A00" letter-spacing="3">
+        <svg width="100%" height="75" viewBox="0 0 600 75" xmlns="http://www.w3.org/2000/svg">
+            <path id="curve" d="M 20 65 Q 300 15 580 65" fill="transparent"/>
+            <text font-family="'Helvetica Neue', sans-serif" font-size="22" font-weight="900" fill="#FF7A00" letter-spacing="1">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
-                    🍴 RESTAURANT FERNANDEZ
+                    🍴 RESTAURANT RICO FERNANDEZ
                 </textPath>
             </text>
         </svg>
@@ -153,7 +153,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Banner superior con tus 3 imágenes reales
+# 4. Banner superior con imágenes desde GitHub
 st.markdown(
     """
     <div class="food-banner-container">
@@ -214,7 +214,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             "⚠️ Por favor, selecciona al menos un producto para enviar tu pedido."
         )
     else:
-        mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
+        mensaje = f"*NUEVO PEDIDO - RESTAURANT RICO FERNANDEZ*\n"
         mensaje += f"📍 *{mesa}*\n\n"
         if entrada != "Ninguna":
             mensaje += f"• *Entrada:* {entrada}\n"
@@ -225,8 +225,8 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        # Tu número de celular con código 51
-        numero_whatsapp = "51918539634"
+        # Recuerda colocar tu número de celular con prefijo 51
+        numero_whatsapp = "51900000000"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
         url_whatsapp = (
