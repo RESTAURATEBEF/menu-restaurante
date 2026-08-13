@@ -143,7 +143,7 @@ st.markdown(
             <path id="curve" d="M 50 80 Q 250 15 450 80" fill="transparent"/>
             <text font-family="'Helvetica Neue', sans-serif" font-size="34" font-weight="900" fill="#FF7A00" letter-spacing="3">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
-                    🍴 RICO FERNANDEZ
+                    🍴 RESTAURANT FERNANDEZ
                 </textPath>
             </text>
         </svg>
