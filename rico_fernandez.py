@@ -53,7 +53,7 @@ st.markdown(
         font-weight: 300;
     }
 
-    /* Banner superior con platos */
+    /* Banner superior con tus platos reales */
     .food-banner-container {
         display: flex;
         justify-content: space-around;
@@ -149,7 +149,7 @@ st.markdown(
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
-# 4. Banner superior con imágenes (Incluye tu foto real de Ají de Gallina)
+# 4. Banner superior con tus 3 imágenes reales subidas a GitHub
 st.markdown(
     """
     <div class="food-banner-container">
@@ -158,11 +158,11 @@ st.markdown(
             <p class="food-item-name">Ají de Gallina</p>
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/fernandoceballos7/menudigital/main/lomo_saltado_vibrante.png" alt="Lomo Saltado">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/lomo_saltado.jpg" alt="Lomo Saltado">
             <p class="food-item-name">Lomo Saltado</p>
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/fernandoceballos7/menudigital/main/ceviche_premium.png" alt="Ceviche">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/veciche.jpg" alt="Ceviche">
             <p class="food-item-name">Ceviche</p>
         </div>
     </div>
@@ -179,6 +179,7 @@ segundos = [
     "Ninguno",
     "Ají de Gallina",
     "Lomo Saltado",
+    "Ceviche de Pescado",
     "Pollo a la Brasa (1/4)",
     "Arroz Chaufa de Pollo",
     "Tallarín Saltado",
@@ -220,8 +221,8 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        # Ingresa tu número de celular con prefijo 51 (Ej: 519XXXXXXXX)
-        numero_whatsapp = "51900000000"  # <-- REEMPLAZA CON TU NÚMERO REAL
+        # Recuerda cambiar por tu número real de celular (Ej: 519XXXXXXXX)
+        numero_whatsapp = "51900000000"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
         url_whatsapp = (
