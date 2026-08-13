@@ -135,15 +135,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 3. Encabezado principal con Título Curvado Ajustado (Sin Cortes)
+# 3. Encabezado con Texto Curvado: RESTAURANT FERNANDEZ
 st.markdown(
     """
     <div class="header-container">
-        <svg width="100%" height="75" viewBox="0 0 600 75" xmlns="http://www.w3.org/2000/svg">
-            <path id="curve" d="M 20 65 Q 300 15 580 65" fill="transparent"/>
-            <text font-family="'Helvetica Neue', sans-serif" font-size="22" font-weight="900" fill="#FF7A00" letter-spacing="1">
+        <svg width="100%" height="80" viewBox="0 0 600 80" xmlns="http://www.w3.org/2000/svg">
+            <path id="curve" d="M 40 70 Q 300 15 560 70" fill="transparent"/>
+            <text font-family="'Helvetica Neue', sans-serif" font-size="28" font-weight="900" fill="#FF7A00" letter-spacing="2">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
-                    🍴 RESTAURANT RICO FERNANDEZ
+                    🍴 RESTAURANT FERNANDEZ
                 </textPath>
             </text>
         </svg>
@@ -153,7 +153,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Banner superior con imágenes desde GitHub
+# 4. Banner superior con imágenes reales
 st.markdown(
     """
     <div class="food-banner-container">
@@ -214,7 +214,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             "⚠️ Por favor, selecciona al menos un producto para enviar tu pedido."
         )
     else:
-        mensaje = f"*NUEVO PEDIDO - RESTAURANT RICO FERNANDEZ*\n"
+        mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
         mensaje += f"📍 *{mesa}*\n\n"
         if entrada != "Ninguna":
             mensaje += f"• *Entrada:* {entrada}\n"
@@ -225,7 +225,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        # Recuerda colocar tu número de celular con prefijo 51
+        # Recuerda colocar tu celular real con prefijo 51
         numero_whatsapp = "51900000000"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
