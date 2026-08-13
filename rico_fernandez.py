@@ -3,13 +3,13 @@ import streamlit as st
 
 # 1. Configuración de la página
 st.set_page_config(
-    page_title="RICO FERNANDEZ - Menú Digital",
+    page_title="RESTAURANT FERNANDEZ - Menú Digital",
     page_icon="🍔",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-# 2. Estilos CSS Personalizados (Diseño Dark & Neon Premium con Banner)
+# 2. Estilos CSS Personalizados
 st.markdown(
     """
     <style>
@@ -20,45 +20,41 @@ st.markdown(
         font-family: 'Helvetica Neue', sans-serif;
     }
     
-    /* Ocultar elementos por defecto de Streamlit */
+    /* Ocultar elementos por defecto */
     header {visibility: hidden;}
     [data-testid="stSidebar"] {visibility: hidden;}
 
-    /* Contenedor principal */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 1.5rem !important;
         padding-bottom: 3rem !important;
     }
 
-    /* Header y Título principal */
+    /* Header centrado */
     .header-container {
         text-align: center;
-        margin-bottom: 0px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
-    .main-title {
-        color: #FF7A00;
-        font-weight: 800;
-        font-size: 2.5rem;
-        text-shadow: 0px 0px 20px rgba(255, 122, 0, 0.7);
-        margin-bottom: 0px;
-        letter-spacing: 1.5px;
-    }
-    
     .sub-title {
         color: #9CA3AF;
-        font-size: 1.0rem;
-        margin-top: -5px;
-        margin-bottom: 20px;
+        font-size: 1.1rem;
+        margin-top: -10px;
+        margin-bottom: 15px;
         font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
     }
 
-    /* Banner superior con tus platos reales */
+    /* Banner superior con platos reales */
     .food-banner-container {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        margin-top: 10px;
+        margin-top: 5px;
         margin-bottom: 25px;
         border-radius: 20px;
         padding: 12px 5px;
@@ -72,24 +68,24 @@ st.markdown(
     }
 
     .food-item img {
-        width: 85px;
-        height: 85px;
+        width: 90px;
+        height: 90px;
         object-fit: cover;
         border-radius: 50%;
-        box-shadow: 0px 0px 15px rgba(255, 122, 0, 0.4);
+        box-shadow: 0px 0px 18px rgba(255, 122, 0, 0.4);
         border: 3px solid rgba(255, 122, 0, 0.6);
         transition: transform 0.3s ease;
     }
 
     .food-item-name {
         margin-top: 8px;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         color: #F3F4F6;
         font-weight: 600;
         text-transform: uppercase;
     }
 
-    /* Formularios y selectores */
+    /* Formularios */
     h3 {
         color: #F3F4F6 !important;
         font-size: 1.2rem !important;
@@ -139,17 +135,25 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 3. Encabezado principal
-st.markdown('<div class="header-container">', unsafe_allow_html=True)
+# 3. Encabezado principal con Título Curvado en SVG
 st.markdown(
-    '<p class="main-title">🍴 RICO FERNANDEZ</p>', unsafe_allow_html=True
+    """
+    <div class="header-container">
+        <svg width="100%" height="90" viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg">
+            <path id="curve" d="M 50 80 Q 250 15 450 80" fill="transparent"/>
+            <text font-family="'Helvetica Neue', sans-serif" font-size="34" font-weight="900" fill="#FF7A00" letter-spacing="3">
+                <textPath href="#curve" startOffset="50%" text-anchor="middle">
+                    🍴 RICO FERNANDEZ
+                </textPath>
+            </text>
+        </svg>
+        <p class="sub-title">Menú Digital & Pedidos</p>
+    </div>
+""",
+    unsafe_allow_html=True,
 )
-st.markdown(
-    '<p class="sub-title">Menú Digital & Pedidos</p>', unsafe_allow_html=True
-)
-st.markdown("</div>", unsafe_allow_html=True)
 
-# 4. Banner superior con tus 3 imágenes reales subidas a GitHub
+# 4. Banner superior con tus 3 imágenes reales
 st.markdown(
     """
     <div class="food-banner-container">
@@ -186,7 +190,7 @@ segundos = [
 ]
 bebidas = ["Ninguna", "Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"]
 
-# 6. Formulario de Selección
+# 6. Formulario
 st.markdown("### 📍 Ubicación")
 mesa = st.selectbox("Selecciona tu número de mesa:", mesas)
 
@@ -210,7 +214,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             "⚠️ Por favor, selecciona al menos un producto para enviar tu pedido."
         )
     else:
-        mensaje = f"*NUEVO PEDIDO - RICO FERNANDEZ*\n"
+        mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
         mensaje += f"📍 *{mesa}*\n\n"
         if entrada != "Ninguna":
             mensaje += f"• *Entrada:* {entrada}\n"
@@ -221,7 +225,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        # Recuerda cambiar por tu número real de celular (Ej: 519XXXXXXXX)
+        # Tu número de celular con código 51
         numero_whatsapp = "51918539634"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
