@@ -9,7 +9,62 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# 2. Estilos CSS Personalizados
+# 2. Inicializar la lista de platos en la memoria de la App (st.session_state)
+if "entradas" not in st.session_state:
+    st.session_state["entradas"] = ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"]
+
+if "segundos" not in st.session_state:
+    st.session_state["segundos"] = [
+        "Ají de Gallina",
+        "Lomo Saltado",
+        "Ceviche de Pescado",
+        "Pollo a la Brasa (1/4)",
+        "Arroz Chaufa de Pollo",
+    ]
+
+if "bebidas" not in st.session_state:
+    st.session_state["bebidas"] = ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"]
+
+
+# 3. PANEL DE ADMINISTRADOR (Barra Lateral)
+st.sidebar.title("🔑 Panel de Administración")
+clave_admin = st.sidebar.text_input("Ingresa la clave:", type="password")
+
+if clave_admin == "1234":
+    st.sidebar.success("🔓 Acceso concedido")
+    st.sidebar.markdown("### 📝 Editar Menú del Día")
+    st.sidebar.caption("Escribe los platos separados por comas:")
+
+    # Cajas de texto para editar
+    nuevas_entradas = st.sidebar.text_area(
+        "Entradas del Día:",
+        value=", ".join(st.session_state["entradas"]),
+        height=80
+    )
+    nuevos_segundos = st.sidebar.text_area(
+        "Segundos del Día:",
+        value=", ".join(st.session_state["segundos"]),
+        height=100
+    )
+    nuevas_bebidas = st.sidebar.text_area(
+        "Bebidas:",
+        value=", ".join(st.session_state["bebidas"]),
+        height=80
+    )
+
+    if st.sidebar.button("💾 Guardar Menú del Día"):
+        # Convertir el texto separado por comas en una lista limpia
+        st.session_state["entradas"] = [e.strip() for e in nuevas_entradas.split(",") if e.strip()]
+        st.session_state["segundos"] = [s.strip() for s in nuevos_segundos.split(",") if s.strip()]
+        st.session_state["bebidas"] = [b.strip() for b in nuevas_bebidas.split(",") if b.strip()]
+        st.sidebar.success("✅ ¡Menú actualizado en pantalla!")
+        st.rerun()
+
+elif clave_admin != "":
+    st.sidebar.error("❌ Clave incorrecta")
+
+
+# 4. Estilos CSS Personalizados
 st.markdown(
     """
     <style>
@@ -20,9 +75,7 @@ st.markdown(
         font-family: 'Helvetica Neue', sans-serif;
     }
     
-    /* Ocultar elementos por defecto */
     header {visibility: hidden;}
-    [data-testid="stSidebar"] {visibility: hidden;}
 
     .block-container {
         padding-top: 1.5rem !important;
@@ -135,7 +188,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 3. Encabezado con Texto Curvado: RESTAURANT FERNANDEZ
+# 5. Encabezado Curvado
 st.markdown(
     """
     <div class="header-container">
@@ -153,7 +206,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Banner superior con imágenes reales
+# 6. Banner de Fotos Reales
 st.markdown(
     """
     <div class="food-banner-container">
@@ -176,28 +229,19 @@ st.markdown(
 
 st.divider()
 
-# 5. Opciones del Menú
+# 7. Formulario del Cliente (Carga las opciones dinámicas del Administrador)
 mesas = [f"Mesa {i}" for i in range(1, 16)]
-entradas = ["Ninguna", "Causa Rellena", "Tequeños de Queso", "Sopa Wonton"]
-segundos = [
-    "Ninguno",
-    "Ají de Gallina",
-    "Lomo Saltado",
-    "Ceviche de Pescado",
-    "Pollo a la Brasa (1/4)",
-    "Arroz Chaufa de Pollo",
-    "Tallarín Saltado",
-]
-bebidas = ["Ninguna", "Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"]
+lista_entradas = ["Ninguna"] + st.session_state["entradas"]
+lista_segundos = ["Ninguno"] + st.session_state["segundos"]
+lista_bebidas = ["Ninguna"] + st.session_state["bebidas"]
 
-# 6. Formulario
 st.markdown("### 📍 Ubicación")
 mesa = st.selectbox("Selecciona tu número de mesa:", mesas)
 
 st.markdown("### 📋 Tu Orden")
-entrada = st.selectbox("1. Entrada:", entradas)
-segundo = st.selectbox("2. Segundo:", segundos)
-bebida = st.selectbox("3. Bebida:", bebidas)
+entrada = st.selectbox("1. Entrada:", lista_entradas)
+segundo = st.selectbox("2. Segundo:", lista_segundos)
+bebida = st.selectbox("3. Bebida:", lista_bebidas)
 
 observaciones = st.text_area(
     "📝 Observaciones (Opcional):",
@@ -207,12 +251,10 @@ observaciones = st.text_area(
 
 st.divider()
 
-# 7. Confirmación y Enviar a WhatsApp
+# 8. Confirmación y Enviar a WhatsApp
 if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
     if entrada == "Ninguna" and segundo == "Ninguno" and bebida == "Ninguna":
-        st.warning(
-            "⚠️ Por favor, selecciona al menos un producto para enviar tu pedido."
-        )
+        st.warning("⚠️ Por favor, selecciona al menos un producto para enviar tu pedido.")
     else:
         mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
         mensaje += f"📍 *{mesa}*\n\n"
@@ -225,13 +267,11 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        # Recuerda colocar tu celular real con prefijo 51
-        numero_whatsapp = "51918539634"
+        # Tu número de celular con código 51
+        numero_whatsapp = "51900000000"  # <-- REEMPLAZA CON TU CELULAR REAL
 
         mensaje_codificado = urllib.parse.quote(mensaje)
-        url_whatsapp = (
-            f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
-        )
+        url_whatsapp = f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
 
         st.success("✅ ¡Pedido generado con éxito!")
         st.markdown(
