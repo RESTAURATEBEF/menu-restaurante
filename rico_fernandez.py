@@ -268,7 +268,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
         # Tu número de celular con código 51
-        numero_whatsapp = "51900000000"  # <-- REEMPLAZA CON TU CELULAR REAL
+        numero_whatsapp = "51918539634"  # <-- REEMPLAZA CON TU CELULAR REAL
 
         mensaje_codificado = urllib.parse.quote(mensaje)
         url_whatsapp = f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
