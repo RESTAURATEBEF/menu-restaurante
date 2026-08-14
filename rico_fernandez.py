@@ -8,21 +8,24 @@ st.set_page_config(
     layout="centered",
 )
 
-# 2. Inicializar la lista de platos en la memoria de la App (st.session_state)
-if "entradas" not in st.session_state:
-    st.session_state["entradas"] = ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"]
 
-if "segundos" not in st.session_state:
-    st.session_state["segundos"] = [
-        "Ají de Gallina",
-        "Lomo Saltado",
-        "Ceviche de Pescado",
-        "Pollo a la Brasa (1/4)",
-        "Arroz Chaufa de Pollo",
-    ]
+# 2. BASE DE DATOS GLOBAL EN MEMORIA (Compartida entre todos los usuarios)
+@st.cache_resource
+def obtener_menu_global():
+    return {
+        "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
+        "segundos": [
+            "Ají de Gallina",
+            "Lomo Saltado",
+            "Ceviche de Pescado",
+            "Pollo a la Brasa (1/4)",
+            "Arroz Chaufa de Pollo",
+        ],
+        "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
+    }
 
-if "bebidas" not in st.session_state:
-    st.session_state["bebidas"] = ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"]
+
+menu_global = obtener_menu_global()
 
 
 # 3. Estilos CSS Personalizados
@@ -63,7 +66,7 @@ st.markdown(
         text-transform: uppercase;
     }
 
-    /* Banner superior con platos reales */
+    /* Banner superior con platos */
     .food-banner-container {
         display: flex;
         justify-content: space-around;
@@ -99,7 +102,7 @@ st.markdown(
         text-transform: uppercase;
     }
 
-    /* Formularios */
+    /* Formulario */
     h3 {
         color: #F3F4F6 !important;
         font-size: 1.2rem !important;
@@ -118,14 +121,14 @@ st.markdown(
         color: #FFFFFF !important;
     }
 
-    .stTextArea textarea {
+    .stTextArea textarea, .stTextInput input {
         background-color: #1A1D24 !important;
         border: 1px solid #2E3440 !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
     }
 
-    /* Botón Principal */
+    /* Botones */
     .stButton > button {
         background: linear-gradient(135deg, #FF7A00 0%, #FF5500 100%) !important;
         color: #FFFFFF !important;
@@ -190,11 +193,11 @@ st.markdown(
 
 st.divider()
 
-# 6. Formulario del Cliente
+# 6. Formulario del Cliente (Lee la lista global)
 mesas = [f"Mesa {i}" for i in range(1, 16)]
-lista_entradas = ["Ninguna"] + st.session_state["entradas"]
-lista_segundos = ["Ninguno"] + st.session_state["segundos"]
-lista_bebidas = ["Ninguna"] + st.session_state["bebidas"]
+lista_entradas = ["Ninguna"] + menu_global["entradas"]
+lista_segundos = ["Ninguno"] + menu_global["segundos"]
+lista_bebidas = ["Ninguna"] + menu_global["bebidas"]
 
 st.markdown("### 📍 Ubicación")
 mesa = st.selectbox("Selecciona tu número de mesa:", mesas)
@@ -215,7 +218,10 @@ st.divider()
 # 7. Confirmación y Enviar a WhatsApp
 if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
     if entrada == "Ninguna" and segundo == "Ninguno" and bebida == "Ninguna":
-        st.warning("⚠️ Por favor, selecciona al menos un producto para enviar tu pedido.")
+        st.warning(
+            "⚠️ Por favor, selecciona al menos un producto para enviar tu"
+            " pedido."
+        )
     else:
         mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
         mensaje += f"📍 *{mesa}*\n\n"
@@ -231,7 +237,9 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         numero_whatsapp = "51900000000"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
-        url_whatsapp = f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
+        url_whatsapp = (
+            f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
+        )
 
         st.success("✅ ¡Pedido generado con éxito!")
         st.markdown(
@@ -256,13 +264,15 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             unsafe_allow_html=True,
         )
 
-# 8. PANEL DE ADMINISTRACIÓN EN LA PARTE INFERIOR (Desplegable)
+# 8. PANEL DE ADMINISTRACIÓN (Actualiza el menú de TODOS los usuarios)
 st.write("")
 st.write("")
 st.divider()
 
 with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
-    clave_admin = st.text_input("Ingresa la clave:", type="password", key="pwd_admin")
+    clave_admin = st.text_input(
+        "Ingresa la clave:", type="password", key="pwd_admin"
+    )
 
     if clave_admin == "1234":
         st.success("🔓 Acceso concedido")
@@ -270,28 +280,34 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
 
         nuevas_entradas = st.text_area(
             "Entradas del Día:",
-            value=", ".join(st.session_state["entradas"]),
+            value=", ".join(menu_global["entradas"]),
             height=80,
-            key="txt_ent"
+            key="txt_ent",
         )
         nuevos_segundos = st.text_area(
             "Segundos del Día:",
-            value=", ".join(st.session_state["segundos"]),
+            value=", ".join(menu_global["segundos"]),
             height=100,
-            key="txt_seg"
+            key="txt_seg",
         )
         nuevas_bebidas = st.text_area(
             "Bebidas:",
-            value=", ".join(st.session_state["bebidas"]),
+            value=", ".join(menu_global["bebidas"]),
             height=80,
-            key="txt_beb"
+            key="txt_beb",
         )
 
         if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
-            st.session_state["entradas"] = [e.strip() for e in nuevas_entradas.split(",") if e.strip()]
-            st.session_state["segundos"] = [s.strip() for s in nuevos_segundos.split(",") if s.strip()]
-            st.session_state["bebidas"] = [b.strip() for b in nuevas_bebidas.split(",") if b.strip()]
-            st.success("✅ ¡Menú actualizado en pantalla!")
+            menu_global["entradas"] = [
+                e.strip() for e in nuevas_entradas.split(",") if e.strip()
+            ]
+            menu_global["segundos"] = [
+                s.strip() for s in nuevos_segundos.split(",") if s.strip()
+            ]
+            menu_global["bebidas"] = [
+                b.strip() for b in nuevas_bebidas.split(",") if b.strip()
+            ]
+            st.success("✅ ¡Menú actualizado para todos los clientes!")
             st.rerun()
 
     elif clave_admin != "":
