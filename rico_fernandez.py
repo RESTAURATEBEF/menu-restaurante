@@ -1,12 +1,11 @@
 import urllib.parse
 import streamlit as st
 
-# 1. Configuración de la página (Panel lateral visible por defecto)
+# 1. Configuración de la página
 st.set_page_config(
     page_title="RESTAURANT FERNANDEZ - Menú Digital",
     page_icon="🍔",
     layout="centered",
-    initial_sidebar_state="expanded",
 )
 
 # 2. Inicializar la lista de platos en la memoria de la App (st.session_state)
@@ -26,45 +25,7 @@ if "bebidas" not in st.session_state:
     st.session_state["bebidas"] = ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"]
 
 
-# 3. PANEL DE ADMINISTRADOR (Barra Lateral)
-st.sidebar.title("🔑 Panel de Administración")
-clave_admin = st.sidebar.text_input("Ingresa la clave:", type="password")
-
-if clave_admin == "1234":
-    st.sidebar.success("🔓 Acceso concedido")
-    st.sidebar.markdown("### 📝 Editar Menú del Día")
-    st.sidebar.caption("Escribe los platos separados por comas:")
-
-    # Cajas de texto para editar
-    nuevas_entradas = st.sidebar.text_area(
-        "Entradas del Día:",
-        value=", ".join(st.session_state["entradas"]),
-        height=80
-    )
-    nuevos_segundos = st.sidebar.text_area(
-        "Segundos del Día:",
-        value=", ".join(st.session_state["segundos"]),
-        height=100
-    )
-    nuevas_bebidas = st.sidebar.text_area(
-        "Bebidas:",
-        value=", ".join(st.session_state["bebidas"]),
-        height=80
-    )
-
-    if st.sidebar.button("💾 Guardar Menú del Día"):
-        # Convertir el texto separado por comas en una lista limpia
-        st.session_state["entradas"] = [e.strip() for e in nuevas_entradas.split(",") if e.strip()]
-        st.session_state["segundos"] = [s.strip() for s in nuevos_segundos.split(",") if s.strip()]
-        st.session_state["bebidas"] = [b.strip() for b in nuevas_bebidas.split(",") if b.strip()]
-        st.sidebar.success("✅ ¡Menú actualizado en pantalla!")
-        st.rerun()
-
-elif clave_admin != "":
-    st.sidebar.error("❌ Clave incorrecta")
-
-
-# 4. Estilos CSS Personalizados
+# 3. Estilos CSS Personalizados
 st.markdown(
     """
     <style>
@@ -188,7 +149,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Encabezado Curvado
+# 4. Encabezado Curvado
 st.markdown(
     """
     <div class="header-container">
@@ -206,7 +167,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 6. Banner de Fotos Reales
+# 5. Banner de Fotos Reales
 st.markdown(
     """
     <div class="food-banner-container">
@@ -229,7 +190,7 @@ st.markdown(
 
 st.divider()
 
-# 7. Formulario del Cliente
+# 6. Formulario del Cliente
 mesas = [f"Mesa {i}" for i in range(1, 16)]
 lista_entradas = ["Ninguna"] + st.session_state["entradas"]
 lista_segundos = ["Ninguno"] + st.session_state["segundos"]
@@ -251,7 +212,7 @@ observaciones = st.text_area(
 
 st.divider()
 
-# 8. Confirmación y Enviar a WhatsApp
+# 7. Confirmación y Enviar a WhatsApp
 if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
     if entrada == "Ninguna" and segundo == "Ninguno" and bebida == "Ninguna":
         st.warning("⚠️ Por favor, selecciona al menos un producto para enviar tu pedido.")
@@ -267,7 +228,6 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        # Tu número de celular con código 51
         numero_whatsapp = "51900000000"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
@@ -295,3 +255,44 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             """,
             unsafe_allow_html=True,
         )
+
+# 8. PANEL DE ADMINISTRACIÓN EN LA PARTE INFERIOR (Desplegable)
+st.write("")
+st.write("")
+st.divider()
+
+with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
+    clave_admin = st.text_input("Ingresa la clave:", type="password", key="pwd_admin")
+
+    if clave_admin == "1234":
+        st.success("🔓 Acceso concedido")
+        st.caption("Escribe los platos del día separados por comas:")
+
+        nuevas_entradas = st.text_area(
+            "Entradas del Día:",
+            value=", ".join(st.session_state["entradas"]),
+            height=80,
+            key="txt_ent"
+        )
+        nuevos_segundos = st.text_area(
+            "Segundos del Día:",
+            value=", ".join(st.session_state["segundos"]),
+            height=100,
+            key="txt_seg"
+        )
+        nuevas_bebidas = st.text_area(
+            "Bebidas:",
+            value=", ".join(st.session_state["bebidas"]),
+            height=80,
+            key="txt_beb"
+        )
+
+        if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
+            st.session_state["entradas"] = [e.strip() for e in nuevas_entradas.split(",") if e.strip()]
+            st.session_state["segundos"] = [s.strip() for s in nuevos_segundos.split(",") if s.strip()]
+            st.session_state["bebidas"] = [b.strip() for b in nuevas_bebidas.split(",") if b.strip()]
+            st.success("✅ ¡Menú actualizado en pantalla!")
+            st.rerun()
+
+    elif clave_admin != "":
+        st.error("❌ Clave incorrecta")
