@@ -1,12 +1,12 @@
 import urllib.parse
 import streamlit as st
 
-# 1. Configuración de la página
+# 1. Configuración de la página (Panel lateral visible por defecto)
 st.set_page_config(
     page_title="RESTAURANT FERNANDEZ - Menú Digital",
     page_icon="🍔",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 # 2. Inicializar la lista de platos en la memoria de la App (st.session_state)
@@ -229,7 +229,7 @@ st.markdown(
 
 st.divider()
 
-# 7. Formulario del Cliente (Carga las opciones dinámicas del Administrador)
+# 7. Formulario del Cliente
 mesas = [f"Mesa {i}" for i in range(1, 16)]
 lista_entradas = ["Ninguna"] + st.session_state["entradas"]
 lista_segundos = ["Ninguno"] + st.session_state["segundos"]
@@ -268,7 +268,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
         # Tu número de celular con código 51
-        numero_whatsapp = "51918539634"  # <-- REEMPLAZA CON TU CELULAR REAL
+        numero_whatsapp = "51900000000"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
         url_whatsapp = f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
