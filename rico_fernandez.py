@@ -234,7 +234,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
         if observaciones.strip():
             mensaje += f"• *Obs:* {observaciones.strip()}\n"
 
-        numero_whatsapp = "51900000000"
+        numero_whatsapp = "51918539634"
 
         mensaje_codificado = urllib.parse.quote(mensaje)
         url_whatsapp = (
