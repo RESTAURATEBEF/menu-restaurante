@@ -1,3 +1,4 @@
+import re
 import urllib.parse
 import streamlit as st
 
@@ -107,7 +108,7 @@ st.markdown(
         padding-bottom: 3px;
     }
 
-    /* Barras Desplegables en Azul Noche con Resplandor Azul Eléctrico */
+    /* Barras Desplegables */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #101D42 !important;
         border: 1.5px solid #0077FF !important;
@@ -123,7 +124,7 @@ st.markdown(
         box-shadow: 0px 6px 22px rgba(0, 168, 255, 0.6) !important;
     }
 
-    /* Cajas de texto e Inputs en Azul Noche */
+    /* Cajas de texto con tipeo directo en MAYÚSCULAS */
     .stTextArea textarea, .stTextInput input {
         background-color: #101D42 !important;
         border: 1.5px solid #0055A5 !important;
@@ -131,6 +132,7 @@ st.markdown(
         color: #FFFFFF !important;
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
         transition: all 0.3s ease-in-out !important;
+        text-transform: uppercase !important;
     }
 
     .stTextArea textarea:focus, .stTextInput input:focus {
@@ -138,7 +140,7 @@ st.markdown(
         box-shadow: 0px 0px 15px rgba(0, 168, 255, 0.5) !important;
     }
 
-    /* Botones con degradado azul brillante */
+    /* Botones */
     .stButton > button {
         background: linear-gradient(135deg, #0066FF 0%, #003399 100%) !important;
         color: #FFFFFF !important;
@@ -180,18 +182,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Banner de Fotos Reales (Sin nombres)
+# 5. Banner de Fotos Reales
 st.markdown(
     """
     <div class="food-banner-container">
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/aji_de_gallina.jpg" alt="Plato decorativo 1">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/aji_de_gallina.jpg" alt="Plato 1">
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/lomo_saltado.jpg" alt="Plato decorativo 2">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/lomo_saltado.jpg" alt="Plato 2">
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/veciche.jpg" alt="Plato decorativo 3">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/veciche.jpg" alt="Plato 3">
         </div>
     </div>
 """,
@@ -223,7 +225,6 @@ st.markdown("### 📋 Tu Orden")
 
 pedidos_realizados = []
 
-# Bucle dinámico con "PERSONA X" destacado en Azul Cyan
 for i in range(num_personas):
     st.markdown(
         f"""
@@ -252,11 +253,15 @@ for i in range(num_personas):
 
     pedidos_realizados.append({"entrada": ent, "segundo": seg, "bebida": beb})
 
-observaciones = st.text_area(
-    "📝 Observaciones Generales (Opcional):",
-    placeholder="Ej: Persona 1 sin cebolla, ají aparte para la mesa...",
+# Campo Observaciones: Forzado a Mayúsculas y Filtrado Sin Números
+obs_raw = st.text_area(
+    "📝 Observaciones Generales (Opcional - Solo Letras):",
+    placeholder="EJ: SIN CEBOLLA, AJI APARTE PARA LA MESA...",
     height=80,
 )
+
+# Filtra números (0-9) y convierte a Mayúsculas
+observaciones = re.sub(r"[0-9]", "", obs_raw).upper()
 
 st.divider()
 
