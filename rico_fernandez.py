@@ -106,18 +106,35 @@ st.markdown(
         padding-bottom: 3px;
     }
 
+    /* Barras Desplegables con Sombra y Borde Neón */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #1A1D24 !important;
-        border: 1px solid #2E3440 !important;
+        border: 1.5px solid #FF7A00 !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
+        box-shadow: 0px 4px 15px rgba(255, 122, 0, 0.25) !important;
+        transition: all 0.3s ease-in-out !important;
     }
 
+    .stSelectbox div[data-baseweb="select"]:hover,
+    .stSelectbox div[data-baseweb="select"]:focus-within {
+        border-color: #FF9E43 !important;
+        box-shadow: 0px 6px 22px rgba(255, 122, 0, 0.5) !important;
+    }
+
+    /* Cajas de texto con sombra */
     .stTextArea textarea, .stTextInput input {
         background-color: #1A1D24 !important;
-        border: 1px solid #2E3440 !important;
+        border: 1.5px solid #2E3440 !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4) !important;
+        transition: all 0.3s ease-in-out !important;
+    }
+
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border-color: #FF7A00 !important;
+        box-shadow: 0px 0px 15px rgba(255, 122, 0, 0.4) !important;
     }
 
     /* Botones */
@@ -162,7 +179,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Banner de Fotos Reales (Solo imágenes decorativas sin texto)
+# 5. Banner de Fotos Reales (Sin nombres)
 st.markdown(
     """
     <div class="food-banner-container">
@@ -182,7 +199,7 @@ st.markdown(
 
 st.divider()
 
-# 6. Formulario del Cliente (Lee la lista global)
+# 6. Formulario del Cliente
 mesas = [f"Mesa {i}" for i in range(1, 16)]
 lista_entradas = ["Ninguna"] + menu_global["entradas"]
 lista_segundos = ["Ninguno"] + menu_global["segundos"]
@@ -253,7 +270,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             unsafe_allow_html=True,
         )
 
-# 8. PANEL DE ADMINISTRACIÓN (Actualiza el menú de TODOS los usuarios)
+# 8. PANEL DE ADMINISTRACIÓN
 st.write("")
 st.write("")
 st.divider()
