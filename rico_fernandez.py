@@ -9,31 +9,34 @@ st.set_page_config(
     layout="centered",
 )
 
+# 2. BASE DE DATOS GLOBAL EN SESSION STATE
+if "entradas" not in st.session_state:
+    st.session_state["entradas"] = [
+        "Causa Rellena",
+        "Tequeños de Queso",
+        "Sopa Wonton",
+    ]
 
-# 2. BASE DE DATOS GLOBAL EN MEMORIA
-@st.cache_resource
-def obtener_menu_global():
-    return {
-        "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
-        "segundos": [
-            "Ají de Gallina",
-            "Lomo Saltado",
-            "Ceviche de Pescado",
-            "Pollo a la Brasa (1/4)",
-            "Arroz Chaufa de Pollo",
-        ],
-        "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
-    }
+if "segundos" not in st.session_state:
+    st.session_state["segundos"] = [
+        "Ají de Gallina",
+        "Lomo Saltado",
+        "Ceviche de Pescado",
+        "Pollo a la Brasa (1/4)",
+        "Arroz Chaufa de Pollo",
+    ]
 
+if "bebidas" not in st.session_state:
+    st.session_state["bebidas"] = [
+        "Inca Kola 500ml",
+        "Coca Cola 500ml",
+        "Chicha Morada 1L",
+    ]
 
-menu_global = obtener_menu_global()
-
-
-# 3. Estilos CSS Personalizados - TEMA AZUL ELÉCTRICO Y MAYÚSCULAS
+# 3. Estilos CSS Personalizados
 st.markdown(
     """
     <style>
-    /* Fondo general Azul Eléctrico Profundo */
     .stApp {
         background-color: #0A1128;
         color: #FFFFFF;
@@ -47,7 +50,6 @@ st.markdown(
         padding-bottom: 3rem !important;
     }
 
-    /* Header centrado */
     .header-container {
         text-align: center;
         margin-bottom: 10px;
@@ -67,7 +69,6 @@ st.markdown(
         text-transform: uppercase;
     }
 
-    /* Banner superior con degradado azul */
     .food-banner-container {
         display: flex;
         justify-content: space-around;
@@ -93,10 +94,8 @@ st.markdown(
         border-radius: 50%;
         box-shadow: 0px 0px 18px rgba(0, 150, 255, 0.6);
         border: 3px solid #00A8FF;
-        transition: transform 0.3s ease;
     }
 
-    /* Títulos Formulario */
     h3 {
         color: #FFFFFF !important;
         font-size: 1.2rem !important;
@@ -108,39 +107,27 @@ st.markdown(
         padding-bottom: 3px;
     }
 
-    /* Barras Desplegables en Azul Noche */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #101D42 !important;
         border: 1.5px solid #0077FF !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
         box-shadow: 0px 4px 15px rgba(0, 119, 255, 0.3) !important;
-        transition: all 0.3s ease-in-out !important;
     }
 
-    .stSelectbox div[data-baseweb="select"]:hover,
-    .stSelectbox div[data-baseweb="select"]:focus-within {
-        border-color: #00A8FF !important;
-        box-shadow: 0px 6px 22px rgba(0, 168, 255, 0.6) !important;
+    /* Caja de observaciones en MAYÚSCULAS */
+    div[data-testid="stTextArea"]:has(textarea[aria-label*="Observaciones"]) textarea {
+        text-transform: uppercase !important;
     }
 
-    /* Cajas de texto con tipeo forzado en MAYÚSCULAS */
     .stTextArea textarea, .stTextInput input {
         background-color: #101D42 !important;
         border: 1.5px solid #0055A5 !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
-        transition: all 0.3s ease-in-out !important;
-        text-transform: uppercase !important;
     }
 
-    .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #00A8FF !important;
-        box-shadow: 0px 0px 15px rgba(0, 168, 255, 0.5) !important;
-    }
-
-    /* Botones */
     .stButton > button {
         background: linear-gradient(135deg, #0066FF 0%, #003399 100%) !important;
         color: #FFFFFF !important;
@@ -151,13 +138,7 @@ st.markdown(
         padding: 14px 24px !important;
         width: 100% !important;
         box-shadow: 0px 5px 25px rgba(0, 102, 255, 0.5) !important;
-        transition: all 0.3s ease !important;
         text-transform: uppercase;
-    }
-
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0px 8px 30px rgba(0, 168, 255, 0.8) !important;
     }
     </style>
 """,
@@ -204,9 +185,9 @@ st.divider()
 
 # 6. Formulario del Cliente Dinámico
 mesas = [f"Mesa {i}" for i in range(1, 16)]
-lista_entradas = ["Ninguna"] + menu_global["entradas"]
-lista_segundos = ["Ninguno"] + menu_global["segundos"]
-lista_bebidas = ["Ninguna"] + menu_global["bebidas"]
+lista_entradas = ["Ninguna"] + st.session_state["entradas"]
+lista_segundos = ["Ninguno"] + st.session_state["segundos"]
+lista_bebidas = ["Ninguna"] + st.session_state["bebidas"]
 
 st.markdown("### 📍 Ubicación y Personas")
 col_mesa, col_personas = st.columns(2)
@@ -225,7 +206,6 @@ st.markdown("### 📋 Tu Orden")
 
 pedidos_realizados = []
 
-# Bucles por comensal en Azul Cyan y Mayúsculas
 for i in range(num_personas):
     st.markdown(
         f"""
@@ -262,26 +242,26 @@ obs_input = st.text_area(
     key="txt_obs",
 )
 
-# JavaScript inyectado para bloquar teclas numéricas al escribir en el navegador
+# JS enfocado ÚNICAMENTE en la caja de Observaciones
 st.components.v1.html(
     """
     <script>
     const parentDoc = window.parent.document;
     
-    function aplicarBloqueoNumeros() {
+    function aplicarBloqueoObservaciones() {
+        // Selecciona SOLAMENTE la caja de texto de Observaciones
         const textareas = parentDoc.querySelectorAll('textarea');
         textareas.forEach(textarea => {
-            if (!textarea.dataset.bloqueado) {
+            const label = textarea.getAttribute('aria-label') || '';
+            if (label.includes('Observaciones') && !textarea.dataset.bloqueado) {
                 textarea.dataset.bloqueado = "true";
                 
-                // Previene escribir números (teclado normal y numérico)
                 textarea.addEventListener('keydown', function(e) {
                     if ((e.key >= '0' && e.key <= '9') || (e.keyCode >= 96 && e.keyCode <= 105)) {
                         e.preventDefault();
                     }
                 });
                 
-                // Elimina números si pega texto copiado
                 textarea.addEventListener('input', function(e) {
                     this.value = this.value.replace(/[0-9]/g, '');
                 });
@@ -289,13 +269,12 @@ st.components.v1.html(
         });
     }
 
-    setInterval(aplicarBloqueoNumeros, 400);
+    setInterval(aplicarBloqueoObservaciones, 400);
     </script>
     """,
     height=0,
 )
 
-# Filtro final backend de seguridad (Saca números y convierte a mayúsculas)
 observaciones = re.sub(r"[0-9]", "", obs_input).upper()
 
 st.divider()
@@ -380,31 +359,31 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
 
         nuevas_entradas = st.text_area(
             "Entradas del Día:",
-            value=", ".join(menu_global["entradas"]),
+            value=", ".join(st.session_state["entradas"]),
             height=80,
-            key="txt_ent",
+            key="admin_ent",
         )
         nuevos_segundos = st.text_area(
             "Segundos del Día:",
-            value=", ".join(menu_global["segundos"]),
+            value=", ".join(st.session_state["segundos"]),
             height=100,
-            key="txt_seg",
+            key="admin_seg",
         )
         nuevas_bebidas = st.text_area(
             "Bebidas:",
-            value=", ".join(menu_global["bebidas"]),
+            value=", ".join(st.session_state["bebidas"]),
             height=80,
-            key="txt_beb",
+            key="admin_beb",
         )
 
         if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
-            menu_global["entradas"] = [
+            st.session_state["entradas"] = [
                 e.strip() for e in nuevas_entradas.split(",") if e.strip()
             ]
-            menu_global["segundos"] = [
+            st.session_state["segundos"] = [
                 s.strip() for s in nuevos_segundos.split(",") if s.strip()
             ]
-            menu_global["bebidas"] = [
+            st.session_state["bebidas"] = [
                 b.strip() for b in nuevas_bebidas.split(",") if b.strip()
             ]
             st.success("✅ ¡Menú actualizado para todos los clientes!")
