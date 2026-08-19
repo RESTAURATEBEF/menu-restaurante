@@ -48,7 +48,7 @@ def guardar_menu(datos):
 # Carga dinámica del menú en cada renderizado
 menu_actual = cargar_menu()
 
-# 3. Estilos CSS Personalizados
+# 3. Estilos CSS Personalizados (Bordes gruesos y fondo más claro)
 st.markdown(
     """
     <style>
@@ -122,24 +122,34 @@ st.markdown(
         padding-bottom: 3px;
     }
 
+    /* ESTILO SELECTBOX: Borde grueso neón y relleno azul claro */
     .stSelectbox div[data-baseweb="select"] {
-        background-color: #101D42 !important;
-        border: 1.5px solid #0077FF !important;
+        background-color: #1A2A4A !important;
+        border: 3px solid #00D4FF !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
-        box-shadow: 0px 4px 15px rgba(0, 119, 255, 0.3) !important;
+        box-shadow: 0px 4px 18px rgba(0, 212, 255, 0.35) !important;
+    }
+
+    /* ESTILO CAJAS DE TEXTO Y CONTRASEÑA */
+    .stTextArea textarea, .stTextInput input {
+        background-color: #1A2A4A !important;
+        border: 3px solid #00D4FF !important;
+        border-radius: 12px !important;
+        color: #FFFFFF !important;
+        box-shadow: 0px 4px 18px rgba(0, 212, 255, 0.35) !important;
+    }
+
+    /* ESTILO PANEL DESPLEGABLE DE ADMINISTRADOR */
+    div[data-testid="stExpander"] {
+        background-color: #1A2A4A !important;
+        border: 3px solid #00D4FF !important;
+        border-radius: 14px !important;
+        box-shadow: 0px 4px 18px rgba(0, 212, 255, 0.35) !important;
     }
 
     div[data-testid="stTextArea"]:has(textarea[aria-label*="Observaciones"]) textarea {
         text-transform: uppercase !important;
-    }
-
-    .stTextArea textarea, .stTextInput input {
-        background-color: #101D42 !important;
-        border: 1.5px solid #0055A5 !important;
-        border-radius: 12px !important;
-        color: #FFFFFF !important;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
     }
 
     .stButton > button {
@@ -147,7 +157,7 @@ st.markdown(
         color: #FFFFFF !important;
         font-weight: bold !important;
         font-size: 18px !important;
-        border: 1px solid #00A8FF !important;
+        border: 2px solid #00D4FF !important;
         border-radius: 14px !important;
         padding: 14px 24px !important;
         width: 100% !important;
@@ -200,7 +210,6 @@ st.divider()
 # 6. Formulario del Cliente
 mesas = [f"Mesa {i}" for i in range(1, 16)]
 
-# Listas directamente cargadas desde el JSON
 lista_entradas = ["Ninguna"] + menu_actual.get("entradas", [])
 lista_segundos = ["Ninguno"] + menu_actual.get("segundos", [])
 lista_bebidas = ["Ninguna"] + menu_actual.get("bebidas", [])
@@ -258,7 +267,7 @@ obs_input = st.text_area(
     key="txt_obs",
 )
 
-# Script para bloquear números únicamente en observaciones
+# JavaScript para restringir números sólo en el área de Observaciones
 st.components.v1.html(
     """
     <script>
@@ -404,13 +413,10 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
                 ],
             }
 
-            # Guardado persistente en el servidor
+            # Guardado persistente en disco
             guardar_menu(nuevo_menu)
 
-            st.success(
-                "✅ ¡Menú guardado! Los clientes verán los cambios al interactuar"
-                " con la pantalla."
-            )
+            st.success("✅ ¡Menú guardado y actualizado para todos los clientes!")
             st.rerun()
 
     elif clave_admin != "":
