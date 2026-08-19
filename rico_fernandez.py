@@ -213,7 +213,7 @@ with col_mesa:
 
 with col_personas:
     num_personas = st.selectbox(
-        "¿Cuántos menús/personas son?",
+        "¿CUÁNTOS MENÚS/PERSONAS SON?",
         options=list(range(1, 11)),
         index=0,
     )
