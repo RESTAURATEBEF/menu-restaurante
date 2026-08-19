@@ -6,8 +6,8 @@ import streamlit as st
 
 # 1. Configuración de la página
 st.set_page_config(
-    page_title="RESTAURANT FERNANDEZ - Menú Digital",
-    page_icon="🍔",
+    page_title="CHIFA ORIENTAL - Menú Digital",
+    page_icon="🥢",
     layout="centered",
 )
 
@@ -16,15 +16,15 @@ ARCHIVO_MENU = "menu_db.json"
 
 # Datos por defecto
 DATOS_POR_DEFECTO = {
-    "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
+    "entradas": ["Sopa Wonton", "Siukai", "Tequeños Orientales"],
     "segundos": [
-        "Ají de Gallina",
-        "Lomo Saltado",
-        "Ceviche de Pescado",
-        "Pollo a la Brasa (1/4)",
-        "Arroz Chaufa de Pollo",
+        "Arroz Chaufa Especial",
+        "Tallarín Saltado de Pollo",
+        "Pollo TiPaKay",
+        "Kam Lu Wantan",
+        "Lomo Saltado Chifa",
     ],
-    "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
+    "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Té Jazmín", "Chicha Morada 1L"],
 }
 
 
@@ -238,15 +238,20 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Encabezado Curvado
+# 4. Encabezado Curvado con Nombre "CHIFA ORIENTAL" y Sombra Hacia Abajo
 st.markdown(
     """
     <div class="header-container">
-        <svg width="100%" height="80" viewBox="0 0 600 80" xmlns="http://www.w3.org/2000/svg">
-            <path id="curve" d="M 40 70 Q 300 15 560 70" fill="transparent"/>
-            <text font-family="'Helvetica Neue', sans-serif" font-size="26" font-weight="900" fill="#00A8FF" letter-spacing="2">
+        <svg width="100%" height="90" viewBox="0 0 600 90" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="140%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="3" flood-color="#000000" flood-opacity="0.9"/>
+                </filter>
+            </defs>
+            <path id="curve" d="M 40 75 Q 300 20 560 75" fill="transparent"/>
+            <text font-family="'Helvetica Neue', sans-serif" font-size="28" font-weight="900" fill="#00A8FF" letter-spacing="2" filter="url(#drop-shadow)">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
-                    🍴 RESTAURANT FERNANDEZ 🍴
+                    🥢 CHIFA ORIENTAL 🥢
                 </textPath>
             </text>
         </svg>
@@ -389,7 +394,7 @@ if btn_enviar:
             " pedido."
         )
     else:
-        mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
+        mensaje = f"*NUEVO PEDIDO - CHIFA ORIENTAL*\n"
         mensaje += f"📍 *{mesa}* (Total personas: {num_personas})\n\n"
 
         for idx, p in enumerate(pedidos_realizados, 1):
