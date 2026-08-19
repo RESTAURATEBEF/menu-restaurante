@@ -48,7 +48,7 @@ def guardar_menu(datos):
 # Carga dinámica del menú en cada renderizado
 menu_actual = cargar_menu()
 
-# 3. Estilos CSS Personalizados con Efecto 3D
+# 3. Estilos CSS Personalizados con Efecto 3D y Botón Centrado
 st.markdown(
     """
     <style>
@@ -190,16 +190,23 @@ st.markdown(
         text-transform: uppercase !important;
     }
 
-    /* EFECTO 3D PARA BOTONES */
+    /* EFECTO 3D Y TEXTO EN NEGRITA EXTRA PARA BOTONES */
+    .stButton {
+        display: flex;
+        justify-content: center;
+    }
+
     .stButton > button {
         background: linear-gradient(135deg, #0066FF 0%, #003399 100%) !important;
         color: #FFFFFF !important;
-        font-weight: bold !important;
+        font-weight: 900 !important;
         font-size: 18px !important;
+        letter-spacing: 1px !important;
         border-radius: 14px !important;
         padding: 14px 24px !important;
         width: 100% !important;
         text-transform: uppercase;
+        text-align: center !important;
         
         border-top: 2px solid #89CFF0 !important;
         border-left: 2px solid #89CFF0 !important;
@@ -228,7 +235,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Encabezado Curvado (Con cubiertos al inicio y al final)
+# 4. Encabezado Curvado
 st.markdown(
     """
     <div class="header-container">
@@ -362,8 +369,13 @@ observaciones = re.sub(r"[0-9]", "", obs_input).upper()
 
 st.divider()
 
-# 7. Confirmación y Enviar a WhatsApp
-if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
+# 7. Confirmación y Enviar a WhatsApp (Centrado)
+col_btn1, col_btn2, col_btn3 = st.columns([0.1, 0.8, 0.1])
+
+with col_btn2:
+    btn_enviar = st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO")
+
+if btn_enviar:
     hay_pedido = any(
         p["entrada"] != "Ninguna"
         or p["segundo"] != "Ninguno"
@@ -413,12 +425,13 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
                     padding: 15px 20px;
                     border: none;
                     border-radius: 12px;
-                    font-weight: bold;
+                    font-weight: 900;
                     width: 100%;
                     font-size: 17px;
                     cursor: pointer;
                     margin-top: 10px;
-                    text-transform: uppercase;">
+                    text-transform: uppercase;
+                    text-align: center;">
                     💬 Abrir WhatsApp para Enviar Pedido
                 </button>
             </a>
