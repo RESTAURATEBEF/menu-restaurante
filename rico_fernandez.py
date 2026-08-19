@@ -77,7 +77,7 @@ st.markdown(
     .sub-title {
         color: #89CFF0;
         font-size: 1rem;
-        margin-top: -8px;
+        margin-top: -5px;
         margin-bottom: 15px;
         font-weight: 300;
         letter-spacing: 2px;
@@ -238,18 +238,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Encabezado Curvado con Nombre "CHIFA ORIENTAL" y Sombra Hacia Abajo
+# 4. Encabezado Curvado con Letras Más Grandes y Más Curvatura
 st.markdown(
     """
     <div class="header-container">
-        <svg width="100%" height="90" viewBox="0 0 600 90" xmlns="http://www.w3.org/2000/svg">
+        <svg width="100%" height="110" viewBox="0 0 600 110" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <filter id="drop-shadow" x="-10%" y="-10%" width="130%" height="140%">
-                    <feDropShadow dx="0" dy="6" stdDeviation="3" flood-color="#000000" flood-opacity="0.9"/>
+                <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="150%">
+                    <feDropShadow dx="0" dy="7" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.95"/>
                 </filter>
             </defs>
-            <path id="curve" d="M 40 75 Q 300 20 560 75" fill="transparent"/>
-            <text font-family="'Helvetica Neue', sans-serif" font-size="28" font-weight="900" fill="#00A8FF" letter-spacing="2" filter="url(#drop-shadow)">
+            <path id="curve" d="M 30 95 Q 300 -10 570 95" fill="transparent"/>
+            <text font-family="'Helvetica Neue', sans-serif" font-size="34" font-weight="900" fill="#00A8FF" letter-spacing="2.5" filter="url(#drop-shadow)">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
                     🥢 CHIFA ORIENTAL 🥢
                 </textPath>
