@@ -222,24 +222,38 @@ st.markdown("### 📋 Tu Orden")
 
 pedidos_realizados = []
 
-# Bucle dinámico que crea campos según la cantidad de personas
+# Bucle dinámico con títulos formateados
 for i in range(num_personas):
-    st.markdown(f"**👤 Persona {i+1}**")
-    
+    st.markdown(
+        f"""
+        <div style="
+            color: #FF7A00; 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            letter-spacing: 1.5px; 
+            margin-top: 15px; 
+            margin-bottom: 8px;
+            text-transform: uppercase;">
+            👤 PERSONA {i+1}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     col1, col2, col3 = st.columns([1, 1, 1])
-    
+
     with col1:
         ent = st.selectbox(f"Entrada:", lista_entradas, key=f"ent_{i}")
     with col2:
         seg = st.selectbox(f"Segundo:", lista_segundos, key=f"seg_{i}")
     with col3:
         beb = st.selectbox(f"Bebida:", lista_bebidas, key=f"beb_{i}")
-    
+
     pedidos_realizados.append({"entrada": ent, "segundo": seg, "bebida": beb})
 
 observaciones = st.text_area(
     "📝 Observaciones Generales (Opcional):",
-    placeholder="Ej: Plato 1 sin cebolla, ají aparte para mesa...",
+    placeholder="Ej: Persona 1 sin cebolla, ají aparte para la mesa...",
     height=80,
 )
 
@@ -248,19 +262,28 @@ st.divider()
 # 7. Confirmación y Enviar a WhatsApp
 if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
     hay_pedido = any(
-        p["entrada"] != "Ninguna" or p["segundo"] != "Ninguno" or p["bebida"] != "Ninguna"
+        p["entrada"] != "Ninguna"
+        or p["segundo"] != "Ninguno"
+        or p["bebida"] != "Ninguna"
         for p in pedidos_realizados
     )
 
     if not hay_pedido:
-        st.warning("⚠️ Por favor, selecciona al menos un producto para enviar tu pedido.")
+        st.warning(
+            "⚠️ Por favor, selecciona al menos un producto para enviar tu"
+            " pedido."
+        )
     else:
         mensaje = f"*NUEVO PEDIDO - RESTAURANT FERNANDEZ*\n"
         mensaje += f"📍 *{mesa}* (Total personas: {num_personas})\n\n"
 
         for idx, p in enumerate(pedidos_realizados, 1):
-            if p["entrada"] != "Ninguna" or p["segundo"] != "Ninguno" or p["bebida"] != "Ninguna":
-                mensaje += f"*— Menú {idx} —*\n"
+            if (
+                p["entrada"] != "Ninguna"
+                or p["segundo"] != "Ninguno"
+                or p["bebida"] != "Ninguna"
+            ):
+                mensaje += f"*— PERSONA {idx} —*\n"
                 if p["entrada"] != "Ninguna":
                     mensaje += f"• *Entrada:* {p['entrada']}\n"
                 if p["segundo"] != "Ninguno":
@@ -273,7 +296,9 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
 
         numero_whatsapp = "51918539634"
         mensaje_codificado = urllib.parse.quote(mensaje)
-        url_whatsapp = f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
+        url_whatsapp = (
+            f"https://wa.me/{numero_whatsapp}?text={mensaje_codificado}"
+        )
 
         st.success("✅ ¡Pedido generado con éxito!")
         st.markdown(
@@ -304,7 +329,9 @@ st.write("")
 st.divider()
 
 with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
-    clave_admin = st.text_input("Ingresa la clave:", type="password", key="pwd_admin")
+    clave_admin = st.text_input(
+        "Ingresa la clave:", type="password", key="pwd_admin"
+    )
 
     if clave_admin == "1234":
         st.success("🔓 Acceso concedido")
