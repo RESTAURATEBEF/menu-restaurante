@@ -1,3 +1,5 @@
+import json
+import os
 import re
 import urllib.parse
 import streamlit as st
@@ -9,41 +11,44 @@ st.set_page_config(
     layout="centered",
 )
 
+# ARCHIVO DE BASE DE DATOS LOCAL
+ARCHIVO_MENU = "menu_db.json"
 
-# 2. BASE DE DATOS GLOBAL COMPARTIDA (Persiste entre todas las sesiones)
-@st.cache_resource
-def obtener_menu_compartido():
-    # Este diccionario vive en la memoria del servidor para TODOS los usuarios
-    return {
-        "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
-        "segundos": [
-            "Ají de Gallina",
-            "Lomo Saltado",
-            "Ceviche de Pescado",
-            "Pollo a la Brasa (1/4)",
-            "Arroz Chaufa de Pollo",
-        ],
-        "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
-    }
+# Datos por defecto
+DATOS_POR_DEFECTO = {
+    "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
+    "segundos": [
+        "Ají de Gallina",
+        "Lomo Saltado",
+        "Ceviche de Pescado",
+        "Pollo a la Brasa (1/4)",
+        "Arroz Chaufa de Pollo",
+    ],
+    "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
+}
 
 
-# Instancia del menú global
-menu_global = obtener_menu_compartido()
+# 2. FUNCIONES DE LECTURA Y ESCRITURA EN DISCO
+def cargar_menu():
+    if not os.path.exists(ARCHIVO_MENU):
+        guardar_menu(DATOS_POR_DEFECTO)
+        return DATOS_POR_DEFECTO
+    try:
+        with open(ARCHIVO_MENU, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return DATOS_POR_DEFECTO
 
-# 3. Auto-refresco en el navegador de los clientes cada 10 segundos
-st.components.v1.html(
-    """
-    <script>
-    // Refresca la sesión suavemente para sincronizar cambios del admin
-    setTimeout(function(){
-        window.parent.postMessage({type: 'streamlit:render'}, '*');
-    }, 10000);
-    </script>
-    """,
-    height=0,
-)
 
-# 4. Estilos CSS Personalizados
+def guardar_menu(datos):
+    with open(ARCHIVO_MENU, "w", encoding="utf-8") as f:
+        json.dump(datos, f, ensure_ascii=False, indent=4)
+
+
+# Carga dinámica del menú en cada renderizado
+menu_actual = cargar_menu()
+
+# 3. Estilos CSS Personalizados
 st.markdown(
     """
     <style>
@@ -154,7 +159,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Encabezado
+# 4. Encabezado Curvado
 st.markdown(
     """
     <div class="header-container">
@@ -172,7 +177,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 6. Banner de fotos
+# 5. Banner de fotos
 st.markdown(
     """
     <div class="food-banner-container">
@@ -192,13 +197,13 @@ st.markdown(
 
 st.divider()
 
-# 7. Formulario del Cliente
+# 6. Formulario del Cliente
 mesas = [f"Mesa {i}" for i in range(1, 16)]
 
-# Carga directa de listas desde el objeto global compartido
-lista_entradas = ["Ninguna"] + menu_global["entradas"]
-lista_segundos = ["Ninguno"] + menu_global["segundos"]
-lista_bebidas = ["Ninguna"] + menu_global["bebidas"]
+# Listas directamente cargadas desde el JSON
+lista_entradas = ["Ninguna"] + menu_actual.get("entradas", [])
+lista_segundos = ["Ninguno"] + menu_actual.get("segundos", [])
+lista_bebidas = ["Ninguna"] + menu_actual.get("bebidas", [])
 
 st.markdown("### 📍 Ubicación y Personas")
 col_mesa, col_personas = st.columns(2)
@@ -253,7 +258,7 @@ obs_input = st.text_area(
     key="txt_obs",
 )
 
-# Bloqueo de números en la caja de Observaciones
+# Script para bloquear números únicamente en observaciones
 st.components.v1.html(
     """
     <script>
@@ -289,7 +294,7 @@ observaciones = re.sub(r"[0-9]", "", obs_input).upper()
 
 st.divider()
 
-# 8. Confirmación y Enviar a WhatsApp
+# 7. Confirmación y Enviar a WhatsApp
 if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
     hay_pedido = any(
         p["entrada"] != "Ninguna"
@@ -353,7 +358,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
             unsafe_allow_html=True,
         )
 
-# 9. PANEL DE ADMINISTRACIÓN
+# 8. PANEL DE ADMINISTRACIÓN
 st.write("")
 st.write("")
 st.divider()
@@ -369,37 +374,42 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
 
         nuevas_entradas = st.text_area(
             "Entradas del Día:",
-            value=", ".join(menu_global["entradas"]),
+            value=", ".join(menu_actual.get("entradas", [])),
             height=80,
             key="admin_ent",
         )
         nuevos_segundos = st.text_area(
             "Segundos del Día:",
-            value=", ".join(menu_global["segundos"]),
+            value=", ".join(menu_actual.get("segundos", [])),
             height=100,
             key="admin_seg",
         )
         nuevas_bebidas = st.text_area(
             "Bebidas:",
-            value=", ".join(menu_global["bebidas"]),
+            value=", ".join(menu_actual.get("bebidas", [])),
             height=80,
             key="admin_beb",
         )
 
         if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
-            # Actualiza el objeto en la memoria del servidor de forma directa
-            menu_global["entradas"] = [
-                e.strip() for e in nuevas_entradas.split(",") if e.strip()
-            ]
-            menu_global["segundos"] = [
-                s.strip() for s in nuevos_segundos.split(",") if s.strip()
-            ]
-            menu_global["bebidas"] = [
-                b.strip() for b in nuevas_bebidas.split(",") if b.strip()
-            ]
+            nuevo_menu = {
+                "entradas": [
+                    e.strip() for e in nuevas_entradas.split(",") if e.strip()
+                ],
+                "segundos": [
+                    s.strip() for s in nuevos_segundos.split(",") if s.strip()
+                ],
+                "bebidas": [
+                    b.strip() for b in nuevas_bebidas.split(",") if b.strip()
+                ],
+            }
+
+            # Guardado persistente en el servidor
+            guardar_menu(nuevo_menu)
 
             st.success(
-                "✅ ¡Menú actualizado en tiempo real para todos los clientes!"
+                "✅ ¡Menú guardado! Los clientes verán los cambios al interactuar"
+                " con la pantalla."
             )
             st.rerun()
 
