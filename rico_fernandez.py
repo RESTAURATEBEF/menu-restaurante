@@ -28,13 +28,13 @@ def obtener_menu_global():
 menu_global = obtener_menu_global()
 
 
-# 3. Estilos CSS Personalizados
+# 3. Estilos CSS Personalizados - TEMA AZUL ELÉCTRICO
 st.markdown(
     """
     <style>
-    /* Fondo general oscuro Charcoal Premium */
+    /* Fondo general Azul Eléctrico Profundo */
     .stApp {
-        background-color: #0E1117;
+        background-color: #0A1128;
         color: #FFFFFF;
         font-family: 'Helvetica Neue', sans-serif;
     }
@@ -57,7 +57,7 @@ st.markdown(
     }
 
     .sub-title {
-        color: #9CA3AF;
+        color: #89CFF0;
         font-size: 1rem;
         margin-top: -8px;
         margin-bottom: 15px;
@@ -66,7 +66,7 @@ st.markdown(
         text-transform: uppercase;
     }
 
-    /* Banner superior */
+    /* Banner superior con degradado azul */
     .food-banner-container {
         display: flex;
         justify-content: space-around;
@@ -75,8 +75,9 @@ st.markdown(
         margin-bottom: 25px;
         border-radius: 20px;
         padding: 12px 5px;
-        background: linear-gradient(180deg, rgba(30, 35, 45, 1) 0%, rgba(14, 17, 23, 1) 100%);
-        border: 1px solid #2E3440;
+        background: linear-gradient(180deg, #002244 0%, #0A1128 100%);
+        border: 1px solid #0055A5;
+        box-shadow: 0px 4px 20px rgba(0, 119, 255, 0.25);
     }
 
     .food-item {
@@ -89,72 +90,72 @@ st.markdown(
         height: 90px;
         object-fit: cover;
         border-radius: 50%;
-        box-shadow: 0px 0px 18px rgba(255, 122, 0, 0.4);
-        border: 3px solid rgba(255, 122, 0, 0.6);
+        box-shadow: 0px 0px 18px rgba(0, 150, 255, 0.6);
+        border: 3px solid #00A8FF;
         transition: transform 0.3s ease;
     }
 
-    /* Formulario */
+    /* Títulos Formulario */
     h3 {
-        color: #F3F4F6 !important;
+        color: #FFFFFF !important;
         font-size: 1.2rem !important;
         font-weight: 700 !important;
         margin-top: 15px !important;
         margin-bottom: 10px !important;
-        border-bottom: 2px solid #FF7A00;
+        border-bottom: 2px solid #00A8FF;
         display: inline-block;
         padding-bottom: 3px;
     }
 
-    /* Barras Desplegables con Sombra */
+    /* Barras Desplegables en Azul Noche con Resplandor Azul Eléctrico */
     .stSelectbox div[data-baseweb="select"] {
-        background-color: #1A1D24 !important;
-        border: 1.5px solid #FF7A00 !important;
+        background-color: #101D42 !important;
+        border: 1.5px solid #0077FF !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
-        box-shadow: 0px 4px 15px rgba(255, 122, 0, 0.25) !important;
+        box-shadow: 0px 4px 15px rgba(0, 119, 255, 0.3) !important;
         transition: all 0.3s ease-in-out !important;
     }
 
     .stSelectbox div[data-baseweb="select"]:hover,
     .stSelectbox div[data-baseweb="select"]:focus-within {
-        border-color: #FF9E43 !important;
-        box-shadow: 0px 6px 22px rgba(255, 122, 0, 0.5) !important;
+        border-color: #00A8FF !important;
+        box-shadow: 0px 6px 22px rgba(0, 168, 255, 0.6) !important;
     }
 
-    /* Cajas de texto e Inputs con sombra */
+    /* Cajas de texto e Inputs en Azul Noche */
     .stTextArea textarea, .stTextInput input {
-        background-color: #1A1D24 !important;
-        border: 1.5px solid #2E3440 !important;
+        background-color: #101D42 !important;
+        border: 1.5px solid #0055A5 !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4) !important;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
         transition: all 0.3s ease-in-out !important;
     }
 
     .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #FF7A00 !important;
-        box-shadow: 0px 0px 15px rgba(255, 122, 0, 0.4) !important;
+        border-color: #00A8FF !important;
+        box-shadow: 0px 0px 15px rgba(0, 168, 255, 0.5) !important;
     }
 
-    /* Botones */
+    /* Botones con degradado azul brillante */
     .stButton > button {
-        background: linear-gradient(135deg, #FF7A00 0%, #FF5500 100%) !important;
+        background: linear-gradient(135deg, #0066FF 0%, #003399 100%) !important;
         color: #FFFFFF !important;
         font-weight: bold !important;
         font-size: 18px !important;
-        border: none !important;
+        border: 1px solid #00A8FF !important;
         border-radius: 14px !important;
         padding: 14px 24px !important;
         width: 100% !important;
-        box-shadow: 0px 5px 25px rgba(255, 122, 0, 0.5) !important;
+        box-shadow: 0px 5px 25px rgba(0, 102, 255, 0.5) !important;
         transition: all 0.3s ease !important;
         text-transform: uppercase;
     }
 
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0px 8px 30px rgba(255, 122, 0, 0.8) !important;
+        box-shadow: 0px 8px 30px rgba(0, 168, 255, 0.8) !important;
     }
     </style>
 """,
@@ -167,7 +168,7 @@ st.markdown(
     <div class="header-container">
         <svg width="100%" height="80" viewBox="0 0 600 80" xmlns="http://www.w3.org/2000/svg">
             <path id="curve" d="M 40 70 Q 300 15 560 70" fill="transparent"/>
-            <text font-family="'Helvetica Neue', sans-serif" font-size="28" font-weight="900" fill="#FF7A00" letter-spacing="2">
+            <text font-family="'Helvetica Neue', sans-serif" font-size="28" font-weight="900" fill="#00A8FF" letter-spacing="2">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
                     🍴 RESTAURANT FERNANDEZ
                 </textPath>
@@ -213,7 +214,7 @@ with col_mesa:
 
 with col_personas:
     num_personas = st.selectbox(
-        "¿CUÁNTOS MENÚS/PERSONAS SON?",
+        "¿Cuántos menús/personas son?",
         options=list(range(1, 11)),
         index=0,
     )
@@ -222,12 +223,12 @@ st.markdown("### 📋 Tu Orden")
 
 pedidos_realizados = []
 
-# Bucle dinámico con títulos formateados
+# Bucle dinámico con "PERSONA X" destacado en Azul Cyan
 for i in range(num_personas):
     st.markdown(
         f"""
         <div style="
-            color: #FF7A00; 
+            color: #00A8FF; 
             font-size: 1.1rem; 
             font-weight: 800; 
             letter-spacing: 1.5px; 
