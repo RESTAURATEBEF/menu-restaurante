@@ -48,7 +48,7 @@ def guardar_menu(datos):
 # Carga dinámica del menú en cada renderizado
 menu_actual = cargar_menu()
 
-# 3. Estilos CSS Personalizados (Bordes gruesos y fondo más claro)
+# 3. Estilos CSS Personalizados con Efecto 3D
 st.markdown(
     """
     <style>
@@ -94,7 +94,7 @@ st.markdown(
         padding: 12px 5px;
         background: linear-gradient(180deg, #002244 0%, #0A1128 100%);
         border: 1px solid #0055A5;
-        box-shadow: 0px 4px 20px rgba(0, 119, 255, 0.25);
+        box-shadow: inset 0px 3px 5px rgba(255, 255, 255, 0.1), 0px 10px 20px rgba(0, 0, 0, 0.6);
     }
 
     .food-item {
@@ -107,7 +107,7 @@ st.markdown(
         height: 90px;
         object-fit: cover;
         border-radius: 50%;
-        box-shadow: 0px 0px 18px rgba(0, 150, 255, 0.6);
+        box-shadow: 0px 5px 15px rgba(0, 150, 255, 0.8), inset 0px 2px 4px rgba(255,255,255,0.4);
         border: 3px solid #00A8FF;
     }
 
@@ -122,47 +122,106 @@ st.markdown(
         padding-bottom: 3px;
     }
 
-    /* ESTILO SELECTBOX: Borde grueso neón y relleno azul claro */
-    .stSelectbox div[data-baseweb="select"] {
+    /* EFECTO 3D PARA TODOS LOS SELECTBOX */
+    div[data-baseweb="select"] > div {
         background-color: #1A2A4A !important;
-        border: 3px solid #00D4FF !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
-        box-shadow: 0px 4px 18px rgba(0, 212, 255, 0.35) !important;
+        
+        border-top: 2px solid #4AA3FF !important;
+        border-left: 2px solid #4AA3FF !important;
+        border-bottom: 3px solid #001A3D !important;
+        border-right: 3px solid #001A3D !important;
+        
+        box-shadow: 
+            0px 8px 15px rgba(0, 0, 0, 0.6), 
+            inset 0px 3px 6px rgba(255, 255, 255, 0.15) !important;
+        
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    
+    div[data-baseweb="select"] > div:active {
+        transform: translateY(3px);
+        box-shadow: 
+            0px 2px 5px rgba(0, 0, 0, 0.6), 
+            inset 0px 4px 8px rgba(0, 0, 0, 0.5) !important;
+        border-top: 3px solid #001A3D !important;
+        border-left: 3px solid #001A3D !important;
+        border-bottom: 2px solid #4AA3FF !important;
+        border-right: 2px solid #4AA3FF !important;
     }
 
-    /* ESTILO CAJAS DE TEXTO Y CONTRASEÑA */
+    div[data-baseweb="select"] * {
+        color: #FFFFFF !important;
+    }
+
+    /* EFECTO 3D PARA CAJAS DE TEXTO Y CONTRASEÑA */
     .stTextArea textarea, .stTextInput input {
         background-color: #1A2A4A !important;
-        border: 3px solid #00D4FF !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
-        box-shadow: 0px 4px 18px rgba(0, 212, 255, 0.35) !important;
+        
+        border-top: 2px solid #4AA3FF !important;
+        border-left: 2px solid #4AA3FF !important;
+        border-bottom: 3px solid #001A3D !important;
+        border-right: 3px solid #001A3D !important;
+        
+        box-shadow: 
+            0px 8px 15px rgba(0, 0, 0, 0.6), 
+            inset 0px 3px 6px rgba(255, 255, 255, 0.15) !important;
     }
 
-    /* ESTILO PANEL DESPLEGABLE DE ADMINISTRADOR */
+    /* EFECTO 3D PARA PANEL DESPLEGABLE DE ADMINISTRADOR */
     div[data-testid="stExpander"] {
         background-color: #1A2A4A !important;
-        border: 3px solid #00D4FF !important;
         border-radius: 14px !important;
-        box-shadow: 0px 4px 18px rgba(0, 212, 255, 0.35) !important;
+        
+        border-top: 2px solid #4AA3FF !important;
+        border-left: 2px solid #4AA3FF !important;
+        border-bottom: 3px solid #001A3D !important;
+        border-right: 3px solid #001A3D !important;
+        
+        box-shadow: 
+            0px 10px 20px rgba(0, 0, 0, 0.7), 
+            inset 0px 2px 5px rgba(255, 255, 255, 0.1) !important;
     }
 
     div[data-testid="stTextArea"]:has(textarea[aria-label*="Observaciones"]) textarea {
         text-transform: uppercase !important;
     }
 
+    /* EFECTO 3D PARA BOTONES */
     .stButton > button {
         background: linear-gradient(135deg, #0066FF 0%, #003399 100%) !important;
         color: #FFFFFF !important;
         font-weight: bold !important;
         font-size: 18px !important;
-        border: 2px solid #00D4FF !important;
         border-radius: 14px !important;
         padding: 14px 24px !important;
         width: 100% !important;
-        box-shadow: 0px 5px 25px rgba(0, 102, 255, 0.5) !important;
         text-transform: uppercase;
+        
+        border-top: 2px solid #89CFF0 !important;
+        border-left: 2px solid #89CFF0 !important;
+        border-bottom: 4px solid #001133 !important;
+        border-right: 4px solid #001133 !important;
+        
+        box-shadow: 
+            0px 10px 15px rgba(0, 0, 0, 0.6), 
+            inset 0px 4px 6px rgba(255, 255, 255, 0.3) !important;
+            
+        transition: all 0.1s ease;
+    }
+    
+    .stButton > button:active {
+        transform: translateY(4px);
+        box-shadow: 
+            0px 2px 4px rgba(0, 0, 0, 0.6), 
+            inset 0px 6px 10px rgba(0, 0, 0, 0.5) !important;
+        border-top: 4px solid #001133 !important;
+        border-left: 4px solid #001133 !important;
+        border-bottom: 2px solid #89CFF0 !important;
+        border-right: 2px solid #89CFF0 !important;
     }
     </style>
 """,
@@ -267,7 +326,7 @@ obs_input = st.text_area(
     key="txt_obs",
 )
 
-# JavaScript para restringir números sólo en el área de Observaciones
+# JavaScript para restringir números sólo en Observaciones
 st.components.v1.html(
     """
     <script>
@@ -413,7 +472,6 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
                 ],
             }
 
-            # Guardado persistente en disco
             guardar_menu(nuevo_menu)
 
             st.success("✅ ¡Menú guardado y actualizado para todos los clientes!")
