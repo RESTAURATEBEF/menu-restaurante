@@ -9,29 +9,25 @@ st.set_page_config(
     layout="centered",
 )
 
-# 2. BASE DE DATOS GLOBAL EN SESSION STATE
-if "entradas" not in st.session_state:
-    st.session_state["entradas"] = [
-        "Causa Rellena",
-        "Tequeños de Queso",
-        "Sopa Wonton",
-    ]
 
-if "segundos" not in st.session_state:
-    st.session_state["segundos"] = [
-        "Ají de Gallina",
-        "Lomo Saltado",
-        "Ceviche de Pescado",
-        "Pollo a la Brasa (1/4)",
-        "Arroz Chaufa de Pollo",
-    ]
+# 2. BASE DE DATOS GLOBAL COMPARTIDA (Para todos los celulares/dispositivos)
+@st.cache_resource
+def obtener_menu_global():
+    return {
+        "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
+        "segundos": [
+            "Ají de Gallina",
+            "Lomo Saltado",
+            "Ceviche de Pescado",
+            "Pollo a la Brasa (1/4)",
+            "Arroz Chaufa de Pollo",
+        ],
+        "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
+    }
 
-if "bebidas" not in st.session_state:
-    st.session_state["bebidas"] = [
-        "Inca Kola 500ml",
-        "Coca Cola 500ml",
-        "Chicha Morada 1L",
-    ]
+
+menu_global = obtener_menu_global()
+
 
 # 3. Estilos CSS Personalizados
 st.markdown(
@@ -185,9 +181,9 @@ st.divider()
 
 # 6. Formulario del Cliente Dinámico
 mesas = [f"Mesa {i}" for i in range(1, 16)]
-lista_entradas = ["Ninguna"] + st.session_state["entradas"]
-lista_segundos = ["Ninguno"] + st.session_state["segundos"]
-lista_bebidas = ["Ninguna"] + st.session_state["bebidas"]
+lista_entradas = ["Ninguna"] + menu_global["entradas"]
+lista_segundos = ["Ninguno"] + menu_global["segundos"]
+lista_bebidas = ["Ninguna"] + menu_global["bebidas"]
 
 st.markdown("### 📍 Ubicación y Personas")
 col_mesa, col_personas = st.columns(2)
@@ -249,7 +245,6 @@ st.components.v1.html(
     const parentDoc = window.parent.document;
     
     function aplicarBloqueoObservaciones() {
-        // Selecciona SOLAMENTE la caja de texto de Observaciones
         const textareas = parentDoc.querySelectorAll('textarea');
         textareas.forEach(textarea => {
             const label = textarea.getAttribute('aria-label') || '';
@@ -359,34 +354,36 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
 
         nuevas_entradas = st.text_area(
             "Entradas del Día:",
-            value=", ".join(st.session_state["entradas"]),
+            value=", ".join(menu_global["entradas"]),
             height=80,
             key="admin_ent",
         )
         nuevos_segundos = st.text_area(
             "Segundos del Día:",
-            value=", ".join(st.session_state["segundos"]),
+            value=", ".join(menu_global["segundos"]),
             height=100,
             key="admin_seg",
         )
         nuevas_bebidas = st.text_area(
             "Bebidas:",
-            value=", ".join(st.session_state["bebidas"]),
+            value=", ".join(menu_global["bebidas"]),
             height=80,
             key="admin_beb",
         )
 
         if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
-            st.session_state["entradas"] = [
+            # Actualiza directamente la lista global en memoria compartida
+            menu_global["entradas"] = [
                 e.strip() for e in nuevas_entradas.split(",") if e.strip()
             ]
-            st.session_state["segundos"] = [
+            menu_global["segundos"] = [
                 s.strip() for s in nuevos_segundos.split(",") if s.strip()
             ]
-            st.session_state["bebidas"] = [
+            menu_global["bebidas"] = [
                 b.strip() for b in nuevas_bebidas.split(",") if b.strip()
             ]
-            st.success("✅ ¡Menú actualizado para todos los clientes!")
+
+            st.success("✅ ¡Menú actualizado globalmente!")
             st.rerun()
 
     elif clave_admin != "":
