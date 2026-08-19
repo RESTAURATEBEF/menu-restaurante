@@ -10,23 +10,42 @@ st.set_page_config(
 )
 
 
-# 2. BASE DE DATOS GLOBAL COMPARTIDA (Para todos los celulares/dispositivos)
+# 2. BASE DE DATOS GLOBAL PERSISTENTE Y DINÁMICA
 @st.cache_resource
-def obtener_menu_global():
+def cargar_base_datos():
     return {
-        "entradas": ["Causa Rellena", "Tequeños de Queso", "Sopa Wonton"],
+        "entradas": [
+            "Causa Rellena",
+            "Tequeños de Queso",
+            "Sopa Wonton",
+            "Ensalada de Fruta",
+        ],
         "segundos": [
             "Ají de Gallina",
             "Lomo Saltado",
             "Ceviche de Pescado",
             "Pollo a la Brasa (1/4)",
             "Arroz Chaufa de Pollo",
+            "Arroz Chaufa con Lomo",
         ],
-        "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Chicha Morada 1L"],
+        "bebidas": [
+            "Inca Kola 500ml",
+            "Coca Cola 500ml",
+            "Chicha Morada 1L",
+            "Chicha de Ccora",
+        ],
     }
 
 
-menu_global = obtener_menu_global()
+# Inicialización de variables globales compartidas
+db_menu = cargar_base_datos()
+
+if "entradas" not in st.session_state:
+    st.session_state["entradas"] = db_menu["entradas"]
+if "segundos" not in st.session_state:
+    st.session_state["segundos"] = db_menu["segundos"]
+if "bebidas" not in st.session_state:
+    st.session_state["bebidas"] = db_menu["bebidas"]
 
 
 # 3. Estilos CSS Personalizados
@@ -111,7 +130,6 @@ st.markdown(
         box-shadow: 0px 4px 15px rgba(0, 119, 255, 0.3) !important;
     }
 
-    /* Caja de observaciones en MAYÚSCULAS */
     div[data-testid="stTextArea"]:has(textarea[aria-label*="Observaciones"]) textarea {
         text-transform: uppercase !important;
     }
@@ -141,7 +159,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Encabezado Curvado
+# 4. Encabezado
 st.markdown(
     """
     <div class="header-container">
@@ -159,7 +177,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Banner de Fotos Reales
+# 5. Banner de fotos
 st.markdown(
     """
     <div class="food-banner-container">
@@ -179,11 +197,13 @@ st.markdown(
 
 st.divider()
 
-# 6. Formulario del Cliente Dinámico
+# 6. Formulario del Cliente
 mesas = [f"Mesa {i}" for i in range(1, 16)]
-lista_entradas = ["Ninguna"] + menu_global["entradas"]
-lista_segundos = ["Ninguno"] + menu_global["segundos"]
-lista_bebidas = ["Ninguna"] + menu_global["bebidas"]
+
+# Lectura dinámica directa desde las variables activas de sesión
+lista_entradas = ["Ninguna"] + st.session_state["entradas"]
+lista_segundos = ["Ninguno"] + st.session_state["segundos"]
+lista_bebidas = ["Ninguna"] + st.session_state["bebidas"]
 
 st.markdown("### 📍 Ubicación y Personas")
 col_mesa, col_personas = st.columns(2)
@@ -230,7 +250,7 @@ for i in range(num_personas):
 
     pedidos_realizados.append({"entrada": ent, "segundo": seg, "bebida": beb})
 
-# Campo Observaciones Generales
+# Observaciones Generales
 obs_input = st.text_area(
     "📝 Observaciones Generales (Opcional - Solo Letras):",
     placeholder="EJ: SIN CEBOLLA, AJI APARTE PARA LA MESA...",
@@ -238,7 +258,7 @@ obs_input = st.text_area(
     key="txt_obs",
 )
 
-# JS enfocado ÚNICAMENTE en la caja de Observaciones
+# Script para bloquear números en las observaciones
 st.components.v1.html(
     """
     <script>
@@ -354,36 +374,52 @@ with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
 
         nuevas_entradas = st.text_area(
             "Entradas del Día:",
-            value=", ".join(menu_global["entradas"]),
+            value=", ".join(st.session_state["entradas"]),
             height=80,
             key="admin_ent",
         )
         nuevos_segundos = st.text_area(
             "Segundos del Día:",
-            value=", ".join(menu_global["segundos"]),
+            value=", ".join(st.session_state["segundos"]),
             height=100,
             key="admin_seg",
         )
         nuevas_bebidas = st.text_area(
             "Bebidas:",
-            value=", ".join(menu_global["bebidas"]),
+            value=", ".join(st.session_state["bebidas"]),
             height=80,
             key="admin_beb",
         )
 
         if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
-            # Actualiza directamente la lista global en memoria compartida
-            menu_global["entradas"] = [
+            # 1. Procesa las nuevas listas introducidas por el admin
+            lista_e = [
                 e.strip() for e in nuevas_entradas.split(",") if e.strip()
             ]
-            menu_global["segundos"] = [
+            lista_s = [
                 s.strip() for s in nuevos_segundos.split(",") if s.strip()
             ]
-            menu_global["bebidas"] = [
+            lista_b = [
                 b.strip() for b in nuevas_bebidas.split(",") if b.strip()
             ]
 
-            st.success("✅ ¡Menú actualizado globalmente!")
+            # 2. Actualiza la caché del servidor
+            db_menu["entradas"] = lista_e
+            db_menu["segundos"] = lista_s
+            db_menu["bebidas"] = lista_b
+
+            # 3. Actualiza el estado activo de la sesión
+            st.session_state["entradas"] = lista_e
+            st.session_state["segundos"] = lista_s
+            st.session_state["bebidas"] = lista_b
+
+            # 4. Limpia la memoria caché para obligar a actualizar la pantalla
+            st.cache_resource.clear()
+
+            st.success(
+                "✅ ¡Menú del día actualizado correctamente en todo el"
+                " sistema!"
+            )
             st.rerun()
 
     elif clave_admin != "":
