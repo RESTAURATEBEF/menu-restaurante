@@ -190,43 +190,46 @@ st.markdown(
         text-transform: uppercase !important;
     }
 
-    /* EFECTO 3D Y TEXTO EN NEGRITA EXTRA PARA BOTONES */
-    .stButton {
-        display: flex;
-        justify-content: center;
+    /* ESTILO PARA CENTRAR EL BOTÓN Y HACER LAS LETRAS MÁS GRANDES Y NEGRITAS */
+    div.stButton {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
     }
 
-    .stButton > button {
+    div.stButton > button {
         background: linear-gradient(135deg, #0066FF 0%, #003399 100%) !important;
         color: #FFFFFF !important;
         font-weight: 900 !important;
-        font-size: 18px !important;
-        letter-spacing: 1px !important;
-        border-radius: 14px !important;
-        padding: 14px 24px !important;
+        font-size: 22px !important;
+        letter-spacing: 1.5px !important;
+        border-radius: 16px !important;
+        padding: 16px 28px !important;
         width: 100% !important;
+        max-width: 500px !important;
         text-transform: uppercase;
         text-align: center !important;
         
         border-top: 2px solid #89CFF0 !important;
         border-left: 2px solid #89CFF0 !important;
-        border-bottom: 4px solid #001133 !important;
-        border-right: 4px solid #001133 !important;
+        border-bottom: 5px solid #001133 !important;
+        border-right: 5px solid #001133 !important;
         
         box-shadow: 
-            0px 10px 15px rgba(0, 0, 0, 0.6), 
-            inset 0px 4px 6px rgba(255, 255, 255, 0.3) !important;
+            0px 12px 20px rgba(0, 0, 0, 0.7), 
+            inset 0px 4px 8px rgba(255, 255, 255, 0.3) !important;
             
         transition: all 0.1s ease;
     }
     
-    .stButton > button:active {
+    div.stButton > button:active {
         transform: translateY(4px);
         box-shadow: 
-            0px 2px 4px rgba(0, 0, 0, 0.6), 
-            inset 0px 6px 10px rgba(0, 0, 0, 0.5) !important;
-        border-top: 4px solid #001133 !important;
-        border-left: 4px solid #001133 !important;
+            0px 3px 6px rgba(0, 0, 0, 0.7), 
+            inset 0px 6px 12px rgba(0, 0, 0, 0.6) !important;
+        border-top: 5px solid #001133 !important;
+        border-left: 5px solid #001133 !important;
         border-bottom: 2px solid #89CFF0 !important;
         border-right: 2px solid #89CFF0 !important;
     }
@@ -369,11 +372,8 @@ observaciones = re.sub(r"[0-9]", "", obs_input).upper()
 
 st.divider()
 
-# 7. Confirmación y Enviar a WhatsApp (Centrado)
-col_btn1, col_btn2, col_btn3 = st.columns([0.1, 0.8, 0.1])
-
-with col_btn2:
-    btn_enviar = st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO")
+# 7. Confirmación y Enviar a WhatsApp (Totalmente Centrado)
+btn_enviar = st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO")
 
 if btn_enviar:
     hay_pedido = any(
@@ -418,23 +418,26 @@ if btn_enviar:
         st.success("✅ ¡Pedido generado con éxito!")
         st.markdown(
             f"""
-            <a href="{url_whatsapp}" target="_blank">
-                <button style="
-                    background-color: #25D366;
-                    color: white;
-                    padding: 15px 20px;
-                    border: none;
-                    border-radius: 12px;
-                    font-weight: 900;
-                    width: 100%;
-                    font-size: 17px;
-                    cursor: pointer;
-                    margin-top: 10px;
-                    text-transform: uppercase;
-                    text-align: center;">
-                    💬 Abrir WhatsApp para Enviar Pedido
-                </button>
-            </a>
+            <div style="display: flex; justify-content: center;">
+                <a href="{url_whatsapp}" target="_blank" style="width: 100%; max-width: 500px; text-decoration: none;">
+                    <button style="
+                        background-color: #25D366;
+                        color: white;
+                        padding: 16px 20px;
+                        border: none;
+                        border-radius: 14px;
+                        font-weight: 900;
+                        width: 100%;
+                        font-size: 20px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                        text-transform: uppercase;
+                        text-align: center;
+                        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);">
+                        💬 Abrir WhatsApp para Enviar Pedido
+                    </button>
+                </a>
+            </div>
             """,
             unsafe_allow_html=True,
         )
