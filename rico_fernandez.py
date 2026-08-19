@@ -94,14 +94,6 @@ st.markdown(
         transition: transform 0.3s ease;
     }
 
-    .food-item-name {
-        margin-top: 8px;
-        font-size: 0.85rem;
-        color: #F3F4F6;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
     /* Formulario */
     h3 {
         color: #F3F4F6 !important;
@@ -170,21 +162,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Banner de Fotos Reales
+# 5. Banner de Fotos Reales (Solo imágenes decorativas sin texto)
 st.markdown(
     """
     <div class="food-banner-container">
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/aji_de_gallina.jpg" alt="Ají de Gallina">
-            <p class="food-item-name">Ají de Gallina</p>
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/aji_de_gallina.jpg" alt="Plato decorativo 1">
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/lomo_saltado.jpg" alt="Lomo Saltado">
-            <p class="food-item-name">Lomo Saltado</p>
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/lomo_saltado.jpg" alt="Plato decorativo 2">
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/veciche.jpg" alt="Ceviche">
-            <p class="food-item-name">Ceviche</p>
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/veciche.jpg" alt="Plato decorativo 3">
         </div>
     </div>
 """,
