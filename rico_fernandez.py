@@ -14,17 +14,26 @@ st.set_page_config(
 # ARCHIVO DE BASE DE DATOS LOCAL
 ARCHIVO_MENU = "menu_db.json"
 
-# Datos por defecto
+# Datos por defecto con Precios Tentativos
 DATOS_POR_DEFECTO = {
-    "entradas": ["Sopa Wonton", "Siukai", "Tequeños Orientales"],
-    "segundos": [
-        "Arroz Chaufa Especial",
-        "Tallarín Saltado de Pollo",
-        "Pollo TiPaKay",
-        "Kam Lu Wantan",
-        "Lomo Saltado Chifa",
+    "entradas": [
+        {"nombre": "Sopa Wonton", "precio": 12.0},
+        {"nombre": "Siukai", "precio": 14.0},
+        {"nombre": "Tequeños Orientales", "precio": 10.0},
     ],
-    "bebidas": ["Inca Kola 500ml", "Coca Cola 500ml", "Té Jazmín", "Chicha Morada 1L"],
+    "segundos": [
+        {"nombre": "Arroz Chaufa Especial", "precio": 18.0},
+        {"nombre": "Tallarín Saltado de Pollo", "precio": 17.0},
+        {"nombre": "Pollo TiPaKay", "precio": 22.0},
+        {"nombre": "Kam Lu Wantan", "precio": 25.0},
+        {"nombre": "Lomo Saltado Chifa", "precio": 24.0},
+    ],
+    "bebidas": [
+        {"nombre": "Inca Kola 500ml", "precio": 5.0},
+        {"nombre": "Coca Cola 500ml", "precio": 5.0},
+        {"nombre": "Té Jazmín", "precio": 6.0},
+        {"nombre": "Chicha Morada 1L", "precio": 10.0},
+    ],
 }
 
 
@@ -35,7 +44,11 @@ def cargar_menu():
         return DATOS_POR_DEFECTO
     try:
         with open(ARCHIVO_MENU, "r", encoding="utf-8") as f:
-            return json.load(f)
+            datos = json.load(f)
+            # Migración automática si el formato anterior era solo texto
+            if datos and isinstance(datos.get("entradas", [])[0], str):
+                return DATOS_POR_DEFECTO
+            return datos
     except Exception:
         return DATOS_POR_DEFECTO
 
@@ -48,7 +61,7 @@ def guardar_menu(datos):
 # Carga dinámica del menú en cada renderizado
 menu_actual = cargar_menu()
 
-# 3. Estilos CSS Personalizados con Efecto 3D y Botón Centrado
+# 3. Estilos CSS Personalizados
 st.markdown(
     """
     <style>
@@ -156,7 +169,7 @@ st.markdown(
     }
 
     /* EFECTO 3D PARA CAJAS DE TEXTO Y CONTRASEÑA */
-    .stTextArea textarea, .stTextInput input {
+    .stTextArea textarea, .stTextInput input, .stNumberInput input {
         background-color: #1A2A4A !important;
         border-radius: 12px !important;
         color: #FFFFFF !important;
@@ -190,7 +203,7 @@ st.markdown(
         text-transform: uppercase !important;
     }
 
-    /* ESTILO PARA CENTRAR EL BOTÓN Y HACER LAS LETRAS MÁS GRANDES Y NEGRITAS */
+    /* BOTÓN CENTRADO CON LETRA GRANDE */
     div.stButton {
         display: flex !important;
         justify-content: center !important;
@@ -238,7 +251,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 4. Encabezado Curvado con Letras Más Grandes y Más Curvatura
+# 4. Encabezado Curvado
 st.markdown(
     """
     <div class="header-container">
@@ -281,12 +294,22 @@ st.markdown(
 
 st.divider()
 
-# 6. Formulario del Cliente
-mesas = [f"Mesa {i}" for i in range(1, 16)]
+# 6. Mapeo de listas para Selectbox con sus precios integrados
+opciones_entradas = ["Ninguna"] + [
+    f"{item['nombre']} - S/ {item['precio']:.2f}"
+    for item in menu_actual.get("entradas", [])
+]
+opciones_segundos = ["Ninguno"] + [
+    f"{item['nombre']} - S/ {item['precio']:.2f}"
+    for item in menu_actual.get("segundos", [])
+]
+opciones_bebidas = ["Ninguna"] + [
+    f"{item['nombre']} - S/ {item['precio']:.2f}"
+    for item in menu_actual.get("bebidas", [])
+]
 
-lista_entradas = ["Ninguna"] + menu_actual.get("entradas", [])
-lista_segundos = ["Ninguno"] + menu_actual.get("segundos", [])
-lista_bebidas = ["Ninguna"] + menu_actual.get("bebidas", [])
+# Formulario
+mesas = [f"Mesa {i}" for i in range(1, 16)]
 
 st.markdown("### 📍 Ubicación y Personas")
 col_mesa, col_personas = st.columns(2)
@@ -304,6 +327,18 @@ with col_personas:
 st.markdown("### 📋 Tu Orden")
 
 pedidos_realizados = []
+total_acumulado = 0.0
+
+
+def extraer_precio(seleccion, lista_base):
+    if seleccion in ["Ninguna", "Ninguno"]:
+        return 0.0, seleccion
+    nombre = seleccion.split(" - S/")[0]
+    for item in lista_base:
+        if item["nombre"] == nombre:
+            return item["precio"], nombre
+    return 0.0, nombre
+
 
 for i in range(num_personas):
     st.markdown(
@@ -325,13 +360,53 @@ for i in range(num_personas):
     col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
-        ent = st.selectbox(f"Entrada:", lista_entradas, key=f"ent_{i}")
-    with col2:
-        seg = st.selectbox(f"Segundo:", lista_segundos, key=f"seg_{i}")
-    with col3:
-        beb = st.selectbox(f"Bebida:", lista_bebidas, key=f"beb_{i}")
+        ent_sel = st.selectbox(f"Entrada:", opciones_entradas, key=f"ent_{i}")
+        p_ent, n_ent = extraer_precio(
+            ent_sel, menu_actual.get("entradas", [])
+        )
 
-    pedidos_realizados.append({"entrada": ent, "segundo": seg, "bebida": beb})
+    with col2:
+        seg_sel = st.selectbox(f"Segundo:", opciones_segundos, key=f"seg_{i}")
+        p_seg, n_seg = extraer_precio(
+            seg_sel, menu_actual.get("segundos", [])
+        )
+
+    with col3:
+        beb_sel = st.selectbox(f"Bebida:", opciones_bebidas, key=f"beb_{i}")
+        p_beb, n_beb = extraer_precio(beb_sel, menu_actual.get("bebidas", []))
+
+    subtotal_persona = p_ent + p_seg + p_beb
+    total_acumulado += subtotal_persona
+
+    pedidos_realizados.append(
+        {
+            "entrada": n_ent,
+            "p_entrada": p_ent,
+            "segundo": n_seg,
+            "p_segundo": p_seg,
+            "bebida": n_beb,
+            "p_bebida": p_beb,
+            "subtotal": subtotal_persona,
+        }
+    )
+
+# Visualización de Cuenta Total
+st.markdown(
+    f"""
+    <div style="
+        background-color: #1A2A4A;
+        border: 2px solid #00A8FF;
+        border-radius: 12px;
+        padding: 12px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        text-align: right;">
+        <span style="font-size: 1.1rem; color: #89CFF0; font-weight: bold;">TOTAL ESTIMADO: </span>
+        <span style="font-size: 1.4rem; color: #25D366; font-weight: 900;">S/ {total_acumulado:.2f}</span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Observaciones Generales
 obs_input = st.text_area(
@@ -377,7 +452,7 @@ observaciones = re.sub(r"[0-9]", "", obs_input).upper()
 
 st.divider()
 
-# 7. Confirmación y Enviar a WhatsApp (Totalmente Centrado)
+# 7. Confirmación y Enviar a WhatsApp
 btn_enviar = st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO")
 
 if btn_enviar:
@@ -405,14 +480,24 @@ if btn_enviar:
             ):
                 mensaje += f"*— PERSONA {idx} —*\n"
                 if p["entrada"] != "Ninguna":
-                    mensaje += f"• *Entrada:* {p['entrada']}\n"
+                    mensaje += (
+                        f"• *Entrada:* {p['entrada']} (S/"
+                        f" {p['p_entrada']:.2f})\n"
+                    )
                 if p["segundo"] != "Ninguno":
-                    mensaje += f"• *Segundo:* {p['segundo']}\n"
+                    mensaje += (
+                        f"• *Segundo:* {p['segundo']} (S/"
+                        f" {p['p_segundo']:.2f})\n"
+                    )
                 if p["bebida"] != "Ninguna":
-                    mensaje += f"• *Bebida:* {p['bebida']}\n"
+                    mensaje += (
+                        f"• *Bebida:* {p['bebida']} (S/ {p['p_bebida']:.2f})\n"
+                    )
 
         if observaciones.strip():
             mensaje += f"\n📝 *OBS:* {observaciones.strip()}\n"
+
+        mensaje += f"\n💰 *TOTAL A PAGAR: S/ {total_acumulado:.2f}*"
 
         numero_whatsapp = "51918539634"
         mensaje_codificado = urllib.parse.quote(mensaje)
@@ -452,50 +537,78 @@ st.write("")
 st.write("")
 st.divider()
 
-with st.expander("🔑 Acceso Administrador (Actualizar Menú)"):
+with st.expander("🔑 Acceso Administrador (Actualizar Menú y Precios)"):
     clave_admin = st.text_input(
         "Ingresa la clave:", type="password", key="pwd_admin"
     )
 
     if clave_admin == "1234":
         st.success("🔓 Acceso concedido")
-        st.caption("Escribe los platos del día separados por comas:")
-
-        nuevas_entradas = st.text_area(
-            "Entradas del Día:",
-            value=", ".join(menu_actual.get("entradas", [])),
-            height=80,
-            key="admin_ent",
-        )
-        nuevos_segundos = st.text_area(
-            "Segundos del Día:",
-            value=", ".join(menu_actual.get("segundos", [])),
-            height=100,
-            key="admin_seg",
-        )
-        nuevas_bebidas = st.text_area(
-            "Bebidas:",
-            value=", ".join(menu_actual.get("bebidas", [])),
-            height=80,
-            key="admin_beb",
+        st.caption(
+            "Escribe un elemento por línea en el formato: Nombre - Precio (Ej:"
+            " Sopa Wonton - 12.50)"
         )
 
-        if st.button("💾 Guardar Menú del Día", key="btn_guardar"):
+        txt_entradas_def = "\n".join(
+            [
+                f"{item['nombre']} - {item['precio']:.2f}"
+                for item in menu_actual.get("entradas", [])
+            ]
+        )
+        txt_segundos_def = "\n".join(
+            [
+                f"{item['nombre']} - {item['precio']:.2f}"
+                for item in menu_actual.get("segundos", [])
+            ]
+        )
+        txt_bebidas_def = "\n".join(
+            [
+                f"{item['nombre']} - {item['precio']:.2f}"
+                for item in menu_actual.get("bebidas", [])
+            ]
+        )
+
+        admin_ent_txt = st.text_area(
+            "Entradas y Precios:", value=txt_entradas_def, height=100
+        )
+        admin_seg_txt = st.text_area(
+            "Segundos y Precios:", value=txt_segundos_def, height=120
+        )
+        admin_beb_txt = st.text_area(
+            "Bebidas y Precios:", value=txt_bebidas_def, height=100
+        )
+
+
+        def parsear_area(texto):
+            items = []
+            for linea in texto.strip().split("\n"):
+                if "-" in linea:
+                    partes = linea.rsplit("-", 1)
+                    nombre = partes[0].strip()
+                    try:
+                        precio = float(partes[1].strip())
+                    except ValueError:
+                        precio = 0.0
+                    if nombre:
+                        items.append({"nombre": nombre, "precio": precio})
+                elif linea.strip():
+                    items.append({"nombre": linea.strip(), "precio": 0.0})
+            return items
+
+
+        if st.button("💾 Guardar Menú y Precios", key="btn_guardar"):
             nuevo_menu = {
-                "entradas": [
-                    e.strip() for e in nuevas_entradas.split(",") if e.strip()
-                ],
-                "segundos": [
-                    s.strip() for s in nuevos_segundos.split(",") if s.strip()
-                ],
-                "bebidas": [
-                    b.strip() for b in nuevas_bebidas.split(",") if b.strip()
-                ],
+                "entradas": parsear_area(admin_ent_txt),
+                "segundos": parsear_area(admin_seg_txt),
+                "bebidas": parsear_area(admin_beb_txt),
             }
 
             guardar_menu(nuevo_menu)
 
-            st.success("✅ ¡Menú guardado y actualizado para todos los clientes!")
+            st.success(
+                "✅ ¡Menú y precios actualizados con éxito para todos los"
+                " clientes!"
+            )
             st.rerun()
 
     elif clave_admin != "":
