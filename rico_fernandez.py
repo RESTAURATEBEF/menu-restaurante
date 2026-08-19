@@ -29,7 +29,7 @@ def obtener_menu_global():
 menu_global = obtener_menu_global()
 
 
-# 3. Estilos CSS Personalizados - TEMA AZUL ELÉCTRICO
+# 3. Estilos CSS Personalizados - TEMA AZUL ELÉCTRICO Y MAYÚSCULAS
 st.markdown(
     """
     <style>
@@ -108,7 +108,7 @@ st.markdown(
         padding-bottom: 3px;
     }
 
-    /* Barras Desplegables */
+    /* Barras Desplegables en Azul Noche */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #101D42 !important;
         border: 1.5px solid #0077FF !important;
@@ -124,7 +124,7 @@ st.markdown(
         box-shadow: 0px 6px 22px rgba(0, 168, 255, 0.6) !important;
     }
 
-    /* Cajas de texto con tipeo directo en MAYÚSCULAS */
+    /* Cajas de texto con tipeo forzado en MAYÚSCULAS */
     .stTextArea textarea, .stTextInput input {
         background-color: #101D42 !important;
         border: 1.5px solid #0055A5 !important;
@@ -225,6 +225,7 @@ st.markdown("### 📋 Tu Orden")
 
 pedidos_realizados = []
 
+# Bucles por comensal en Azul Cyan y Mayúsculas
 for i in range(num_personas):
     st.markdown(
         f"""
@@ -253,15 +254,49 @@ for i in range(num_personas):
 
     pedidos_realizados.append({"entrada": ent, "segundo": seg, "bebida": beb})
 
-# Campo Observaciones: Forzado a Mayúsculas y Filtrado Sin Números
-obs_raw = st.text_area(
+# Campo Observaciones Generales
+obs_input = st.text_area(
     "📝 Observaciones Generales (Opcional - Solo Letras):",
     placeholder="EJ: SIN CEBOLLA, AJI APARTE PARA LA MESA...",
     height=80,
+    key="txt_obs",
 )
 
-# Filtra números (0-9) y convierte a Mayúsculas
-observaciones = re.sub(r"[0-9]", "", obs_raw).upper()
+# JavaScript inyectado para bloquar teclas numéricas al escribir en el navegador
+st.components.v1.html(
+    """
+    <script>
+    const parentDoc = window.parent.document;
+    
+    function aplicarBloqueoNumeros() {
+        const textareas = parentDoc.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            if (!textarea.dataset.bloqueado) {
+                textarea.dataset.bloqueado = "true";
+                
+                // Previene escribir números (teclado normal y numérico)
+                textarea.addEventListener('keydown', function(e) {
+                    if ((e.key >= '0' && e.key <= '9') || (e.keyCode >= 96 && e.keyCode <= 105)) {
+                        e.preventDefault();
+                    }
+                });
+                
+                // Elimina números si pega texto copiado
+                textarea.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[0-9]/g, '');
+                });
+            }
+        });
+    }
+
+    setInterval(aplicarBloqueoNumeros, 400);
+    </script>
+    """,
+    height=0,
+)
+
+# Filtro final backend de seguridad (Saca números y convierte a mayúsculas)
+observaciones = re.sub(r"[0-9]", "", obs_input).upper()
 
 st.divider()
 
@@ -298,7 +333,7 @@ if st.button("🚀 CONFIRMAR Y ENVIAR PEDIDO"):
                     mensaje += f"• *Bebida:* {p['bebida']}\n"
 
         if observaciones.strip():
-            mensaje += f"\n📝 *Obs:* {observaciones.strip()}\n"
+            mensaje += f"\n📝 *OBS:* {observaciones.strip()}\n"
 
         numero_whatsapp = "51918539634"
         mensaje_codificado = urllib.parse.quote(mensaje)
