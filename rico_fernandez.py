@@ -6,7 +6,7 @@ import streamlit as st
 
 # 1. Configuración de la página
 st.set_page_config(
-    page_title="CHIFA ORIENTAL - Menú Digital",
+    page_title="CHIFA MILAGRITOS - Menú Digital",
     page_icon="🥢",
     layout="centered",
 )
@@ -45,7 +45,6 @@ def cargar_menu():
     try:
         with open(ARCHIVO_MENU, "r", encoding="utf-8") as f:
             datos = json.load(f)
-            # Migración automática si el formato anterior era solo texto
             if datos and isinstance(datos.get("entradas", [])[0], str):
                 return DATOS_POR_DEFECTO
             return datos
@@ -262,9 +261,9 @@ st.markdown(
                 </filter>
             </defs>
             <path id="curve" d="M 30 95 Q 300 -10 570 95" fill="transparent"/>
-            <text font-family="'Helvetica Neue', sans-serif" font-size="34" font-weight="900" fill="#00A8FF" letter-spacing="2.5" filter="url(#drop-shadow)">
+            <text font-family="'Helvetica Neue', sans-serif" font-size="32" font-weight="900" fill="#00A8FF" letter-spacing="2" filter="url(#drop-shadow)">
                 <textPath href="#curve" startOffset="50%" text-anchor="middle">
-                    🥢 CHIFA ORIENTAL 🥢
+                    🥢 CHIFA MILAGRITOS 🥢
                 </textPath>
             </text>
         </svg>
@@ -469,7 +468,7 @@ if btn_enviar:
             " pedido."
         )
     else:
-        mensaje = f"*NUEVO PEDIDO - CHIFA ORIENTAL*\n"
+        mensaje = f"*NUEVO PEDIDO - CHIFA MILAGRITOS*\n"
         mensaje += f"📍 *{mesa}* (Total personas: {num_personas})\n\n"
 
         for idx, p in enumerate(pedidos_realizados, 1):
