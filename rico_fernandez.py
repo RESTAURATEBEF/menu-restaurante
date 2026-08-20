@@ -273,18 +273,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. Banner de fotos
+# 5. Banner de fotos actualizado
 st.markdown(
     """
     <div class="food-banner-container">
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/aji_de_gallina.jpg" alt="Plato 1">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/caldo.jpg" alt="Caldo">
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/lomo_saltado.jpg" alt="Plato 2">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/chaufa_con_lomo.jpg" alt="Chaufa con Lomo">
         </div>
         <div class="food-item">
-            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/veciche.jpg" alt="Plato 3">
+            <img src="https://raw.githubusercontent.com/RESTAURATEBEF/menu-restaurante/main/combinado.jpg" alt="Combinado">
         </div>
     </div>
 """,
